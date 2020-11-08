@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+//Reqest_Message
+message Reqest {
+  required int32 SrcPlayerId = 1;
+  required int32 DesPlayerId = 2;
+  required int32 MessageType = 3;
+  required string Message = 4;
+}
+
+message Response{
+  required int32 SrcPlayerId = 1;
+  required string Message = 2;
+}
