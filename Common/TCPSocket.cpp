@@ -302,7 +302,7 @@ int TCPSocket::accept_fd(int fd)
     return accepted_sockfd;
 }
 
-int TCPSocket::process_data(std::function<int(const char *, const int, int)> callback)
+int TCPSocket::process_data()
 {
     printf("[Common][TCPSocket.cpp:%d][INFO]:Begin To Recv_Data\n", __LINE__);
     int ret = recv_data();
@@ -316,6 +316,7 @@ int TCPSocket::process_data(std::function<int(const char *, const int, int)> cal
     }
 
     printf("[Common][TCPSocket.cpp:%d][INFO]:Get_One_Code And Process_CallBack\n", __LINE__);
+    /*
     while (1)
     {
         size_t data_size = MAX_SS_PACKAGE_SIZE;
@@ -332,5 +333,13 @@ int TCPSocket::process_data(std::function<int(const char *, const int, int)> cal
         }
         break;
     }
+    */
+    m_read_callback(this);
     return success;
+}
+
+void TCPSocket::send()
+{
+    //判断是不是在该线程
+    //
 }

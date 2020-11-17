@@ -1,5 +1,9 @@
 #include "BaseServer.h"
 
+void do_pending_functions()
+{
+}
+
 int BaseServer::init()
 {
     if (m_server_socket->open_as_server(m_port, const_cast<char *>(m_ip.c_str())) < 0)

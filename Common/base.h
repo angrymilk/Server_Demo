@@ -70,4 +70,5 @@ enum enmConnErrorCode
     enmConnErrorCode_unknow = -6,
 
 };
+
 #endif //DEMO_BASE_H

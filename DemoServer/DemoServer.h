@@ -19,10 +19,10 @@ public:
     }
 
     int run();
-    void serialize_and_send(shared_ptr<std::string> message, int src_player, int dst_player, int messge_type);
+    //void serialize_and_send(shared_ptr<std::string> message, int src_player, int dst_player, int messge_type);
 
 private:
-    int parsing_and_send(const char *pszInCode, const int iInCodeSize, int socketfd);
+    //int parsing_and_send(const char *pszInCode, const int iInCodeSize, int socketfd);
     std::unordered_map<int, PlayerInfo> m_map_players;
 };
 
