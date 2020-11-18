@@ -24,6 +24,7 @@ public:
 private:
     //int parsing_and_send(const char *pszInCode, const int iInCodeSize, int socketfd);
     std::unordered_map<int, PlayerInfo> m_map_players;
+    ThreadPool m_thread_pool;
 };
 
 #endif

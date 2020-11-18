@@ -26,10 +26,10 @@
 #include <assert.h>
 #include <iostream>
 #include <string>
+#include <pthread.h>
 
 #endif
 
-#include "../Proto/ProtoID.pb.h"
 #include "../Proto/Demo.pb.h"
 enum
 {

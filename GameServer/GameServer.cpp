@@ -1,19 +1,4 @@
-#include "DemoServer.h"
-
-int DemoServer::run()
-{
-    int ret = init();
-    if (ret)
-        return ret;
-
-    for (;;)
-    {
-        if (epoll_recv())
-            break;
-    }
-    return 0;
-}
-
+#include "GameServer.h"
 /*
 void DemoServer::serialize_and_send(shared_ptr<std::string> message, int srcPlayer, int dst_player, int messgeType)
 {
@@ -120,22 +105,107 @@ int DemoServer::parsing_and_send(const char *pszInCode, const int iInCodeSize, i
 
 */
 
-void DemoServer::m_on_message(const TcpSocket &con)
+GameServer::GameServer(std::string ip, int port)
+{
+    m_server.reset(new BaseServer(ip, port, std::bind(m_on_message, this, std::placeholders::_1)));
+}
+
+int GameServer::run()
+{
+    if (m_server->run())
+        return -101;
+    return 0;
+}
+
+int GameServer::m_on_message(TCPSocket &con)
 {
     //将函数扔入计算线程中
     //thread.run(parase(con));
+    get_one_code(con);
 }
 
-void DemoServer::parase(const TcpSocket &con)
+void GameServer::get_one_code(TCPSocket &con)
 {
+    int ret = 0;
     while (1)
     {
-        //从con中的buffer获取one_code：out
-        //根据out的参数进行solve操作
+        size_t data_size = MAX_SS_PACKAGE_SIZE;
+        std::string m_sRvMsgBuf;
+        m_sRvMsgBuf.reserve(MAX_SS_PACKAGE_SIZE);
+        ret = con.m_buffer->get_one_code(const_cast<char *>(m_sRvMsgBuf.c_str()), data_size);
+        if (ret > 0)
+        {
+            solve(con, m_sRvMsgBuf, data_size);
+            continue;
+        }
+        else if (ret < 0)
+        {
+            printf("[GameServer][GameServer.cpp:%d][ERROR]:get_one_code failed. errorCode:%d\n", __LINE__, ret);
+        }
+        break;
     }
 }
 
-void DemoServer::solve(const TcpSocket &con，const string &data)
+void GameServer::solve(TCPSocket &con, std::string &data, int datasize)
 {
     //基本逻辑处理->调用con的发送函数
+    int bodySize = datasize - MESSAGE_HEAD_SIZE;
+    Reqest req;
+    req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
+    printf("[GameServer][GameServer.cpp:%d][INFO]:get_information:[%s]\n", __LINE__, req.message());
+    Response res;
+    res.set_message(req.message());
+
+    char data_[COMMON_BUFFER_SIZE];
+    MsgHead head;
+    head.m_message_len = res.ByteSize() + MESSAGE_HEAD_SIZE;
+    int codeLength = 0;
+    head.encode(data_, codeLength);
+    res.SerializePartialToArray(data_ + codeLength, res.ByteSize());
+
+    vector<int> deletePlayer;
+    for (unordered_map<int, PlayerInfo>::iterator iter = m_map_players.begin(); iter != m_map_players.end(); iter++)
+    {
+        int fd = m_map_players[iter->first].fd;
+        if (m_server->m_sockets_map.find(fd) == m_server->m_sockets_map.end())
+        {
+            printf("[GameServer][GameServer.cpp:%d][WARNING]:fd:[%d] is not in the map now,maybe is deleted\n", __LINE__, fd);
+            deletePlayer.emplace_back(iter->first);
+            continue;
+        }
+    }
+    for (vector<int>::iterator iter = deletePlayer.begin(); iter != deletePlayer.end(); iter++)
+        m_map_players.erase(*iter);
+
+    //ret = m_sockets_map[fd]->send_data(data, (size_t)head.m_message_len);
+    con.send(std::bind(&GameServer::send, this, data_, head.m_message_len));
+    //serialize();
+}
+
+void GameServer::serialize(TCPSocket &con, std::string &data, std::string &out)
+{
+    //序列化处理
+}
+
+void GameServer::parse(char *input, int &size)
+{
+    //反序列化处理
+}
+
+void GameServer::send(char *data, int size)
+{
+    int ret = 0;
+    for (unordered_map<int, PlayerInfo>::iterator iter = m_map_players.begin(); iter != m_map_players.end(); iter++)
+    {
+        int fd = m_map_players[iter->first].fd;
+        ret = m_server->m_sockets_map[fd]->send_data(data, size);
+        if (ret < success)
+        {
+            printf("[GameServer][GameServer.cpp:%d][ERROR]:Send error ret=%d,errno:%d ,strerror:%s,fd = %d\n", __LINE__, ret, errno, strerror(errno), fd);
+        }
+        if (ret > success)
+        {
+            printf("[GameServer][GameServer.cpp:%d][INFO]:Send try multi ret=%d, errno:%d ,strerror:%s, fd = %d\n", __LINE__, ret, errno, strerror(errno), fd);
+        }
+    }
 }
