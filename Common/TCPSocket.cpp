@@ -338,8 +338,8 @@ int TCPSocket::process_data()
     return success;
 }
 
-void TCPSocket::send()
+void TCPSocket::send(const std::string out)
 {
     //判断是不是在该线程
-    //
+    //将这个数据放入baseserver中的等待队列
 }
