@@ -4,14 +4,16 @@
 #include <cstdio>
 using namespace std;
 
-TCPSocket::TCPSocket()
+TCPSocket::TCPSocket(BaseServer *server)
 {
     m_buffer = make_shared<Buffer>();
+    m_server = server;
 }
 
-TCPSocket::TCPSocket(int fd)
+TCPSocket::TCPSocket(int fd, BaseServer *server)
 {
     m_buffer = make_shared<Buffer>();
+    m_server = server;
     m_fd = fd;
 }
 
@@ -75,6 +77,7 @@ int TCPSocket::recv_data()
     return ret;
 }
 
+/*
 int TCPSocket::send_data(char *data, size_t size)
 {
     int ret = 0;
@@ -122,7 +125,7 @@ int TCPSocket::send_data(char *data, size_t size)
     }
     return ret;
 }
-
+*/
 int TCPSocket::open_as_server(uint16_t port, char *ip)
 {
     printf("[Common][TCPSocket.cpp:%d][INFO]:Init Port:%d  IP:%s\n", __LINE__, port, ip);
@@ -334,12 +337,17 @@ int TCPSocket::process_data()
         break;
     }
     */
-    m_read_callback(this);
+    ret = m_read_callback(*this);
+    if (ret)
+    {
+        printf("[Common][TCPSocket.cpp:%d][ERROR]:m_read_callback failed. Error code = [%d]\n", __LINE__, ret);
+        return ret;
+    }
     return success;
 }
 
-void TCPSocket::send()
+//提交任务到io线程中
+int TCPSocket::send(const string &output)
 {
-    //判断是不是在该线程
-    //
+    m_server->run_in_loop(std::bind(&send, this, output));
 }

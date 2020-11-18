@@ -1,11 +1,57 @@
 #include "BaseServer.h"
 
-void do_pending_functions()
+void BaseServer::do_pending_functions()
 {
+    std::vector<Functor> functors;
+    {
+        std::lock_guard<std::mutex> lk(m_mutex);
+        functors.swap(m_pending_functor);
+    }
+    for (const Functor &functor : functors)
+    {
+        functor();
+    }
+}
+
+void BaseServer::run_in_loop(Functor func)
+{
+    //如果是在计算线程提交任务到了io线程中,那么就先放入io线程的pending队列中
+    printf("[Common][BaseServer.cpp:%d][INFO]:I/O Thread Is Submitted Task From Other Thread !!!\n", __LINE__);
+    {
+        std::lock_guard<std::mutex> lk(m_mutex);
+        m_pending_functor.push_back(std::move(func));
+    }
+    wake_up_read();
+}
+
+void BaseServer::wake_up_write()
+{
+    string str = "0";
+    int ret = ::write(m_wake_fd, str.c_str(), 1);
+    if (ret < 0)
+    {
+        printf("[Common][BaseServer.cpp:%d][ERROR]:Write wake_up_fd error error_code:[%d] !!!\n", __LINE__, ret);
+        return;
+    }
+    printf("[Common][BaseServer.cpp:%d][INFO]:Write wake_up_fd num:[%d]\n", __LINE__, ret);
+}
+
+void BaseServer::wake_up_read()
+{
+    char buf[1000];
+    int ret = ::read(m_wake_fd, buf, 1000);
+    if (ret < 0)
+    {
+        printf("[Common][BaseServer.cpp:%d][ERROR]:Read wake_up_fd error error_code:[%d] !!!\n", __LINE__, ret);
+        return;
+    }
+    printf("[Common][BaseServer.cpp:%d][INFO]:Read wake_up_fd num:[%d]\n", __LINE__, ret);
 }
 
 int BaseServer::init()
 {
+    m_thread_id = pthread_self();
+    printf("[Common][BaseServer.cpp:%d][INFO]:Server Thread Num : [%d]\n", __LINE__, m_thread_id);
     if (m_server_socket->open_as_server(m_port, const_cast<char *>(m_ip.c_str())) < 0)
     {
         printf("[Common][BaseServer.cpp:%d][ERROR]:m_server_socket->open_as_server failed\n", __LINE__);
@@ -61,9 +107,14 @@ int BaseServer::epoll_recv()
                 return fail;
             }
         }
+        else if (pstSocket->get_fd() == m_wake_fd)
+        {
+            wake_up_read();
+        }
         else
         {
-            int ret = pstSocket->process_data(std::bind(&BaseServer::parsing_and_send, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+            //int ret = pstSocket->process_data(std::bind(&BaseServer::parsing_and_send, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+            int ret = pstSocket->process_data();
             if (ret == -3)
             {
                 printf("[Common][BaseServer.cpp:%d][WARNING]:socket fd:[%d] Has CLosed\n", __LINE__, socketfd);
@@ -76,5 +127,7 @@ int BaseServer::epoll_recv()
             }
         }
     }
+    //epoll处理完成之后进行对应的io task的任务读取
+    do_pending_functions();
     return 0;
 }

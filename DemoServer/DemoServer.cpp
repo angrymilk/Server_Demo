@@ -123,7 +123,7 @@ int DemoServer::parsing_and_send(const char *pszInCode, const int iInCodeSize, i
 void DemoServer::m_on_message(const TcpSocket &con)
 {
     //将函数扔入计算线程中
-    thread.run(parase(con));
+    //thread.run(parase(con));
 }
 
 void DemoServer::parase(const TcpSocket &con)

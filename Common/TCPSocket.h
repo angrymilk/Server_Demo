@@ -5,17 +5,21 @@
 #include "base.h"
 #include "Buffer.h"
 #include "util.h"
+#include "BaseServer.h"
 using namespace std;
+
+class TCPSocket;
+typedef std::function<int(TCPSocket &)> ReadFunctor;
 
 class TCPSocket
 {
 public:
-    TCPSocket();
-    TCPSocket(int fd);
+    TCPSocket(BaseServer *server);
+    TCPSocket(int fd, BaseServer *server);
     ~TCPSocket();
 
 private:
-    TCPSocket(const TCPSocket &socket);
+    TCPSocket(const TCPSocket &socket, BaseServer *server);
     TCPSocket &operator=(const TCPSocket &socket);
 
 public:
@@ -23,7 +27,7 @@ public:
 
     int recv_data();
 
-    int process_data(std::function<int(const char *, const int, int)> callback);
+    int process_data();
 
     int send_data(char *data, size_t size);
 
@@ -39,9 +43,14 @@ public:
 
     void set_socket_fd(int fd);
 
+    int send(const string &output);
+
 protected:
     int m_fd;
+    ReadFunctor m_read_callback;
     //receiving buffer
     std::shared_ptr<Buffer> m_buffer;
+    int m_thread_id;
+    BaseServer *m_server;
 };
 #endif
