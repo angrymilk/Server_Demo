@@ -13,6 +13,20 @@ void BaseServer::do_pending_functions()
     }
 }
 
+int BaseServer::run()
+{
+    int ret = init();
+    if (ret)
+        return ret;
+
+    for (;;)
+    {
+        if (epoll_recv())
+            return -101;
+    }
+    return 0;
+}
+
 void BaseServer::run_in_loop(Functor func)
 {
     //如果是在计算线程提交任务到了io线程中,那么就先放入io线程的pending队列中
@@ -99,7 +113,7 @@ int BaseServer::epoll_recv()
                 continue;
             }
 
-            m_sockets_map[accepted_sockfd] = make_shared<TCPSocket>(accepted_sockfd);
+            m_sockets_map[accepted_sockfd] = make_shared<TCPSocket>(accepted_sockfd, this, m_read_func);
 
             if (m_epoll.epoll_add(accepted_sockfd) < 0)
             {

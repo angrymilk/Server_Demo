@@ -10,11 +10,12 @@ TCPSocket::TCPSocket(BaseServer *server)
     m_server = server;
 }
 
-TCPSocket::TCPSocket(int fd, BaseServer *server)
+TCPSocket::TCPSocket(int fd, BaseServer *server, ReadFunctor rf)
 {
     m_buffer = make_shared<Buffer>();
     m_server = server;
     m_fd = fd;
+    m_read_callback = rf;
 }
 
 TCPSocket::~TCPSocket()
@@ -347,7 +348,8 @@ int TCPSocket::process_data()
 }
 
 //提交任务到io线程中
-int TCPSocket::send(const string &output)
+int TCPSocket::send(Functor temp)
 {
-    m_server->run_in_loop(std::bind(&send, this, output));
+    m_server->run_in_loop(temp);
+    return 0;
 }

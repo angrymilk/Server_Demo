@@ -15,7 +15,7 @@ class TCPSocket
 {
 public:
     TCPSocket(BaseServer *server);
-    TCPSocket(int fd, BaseServer *server);
+    TCPSocket(int fd, BaseServer *server, ReadFunctor rf);
     ~TCPSocket();
 
 private:
@@ -43,13 +43,13 @@ public:
 
     void set_socket_fd(int fd);
 
-    int send(const string &output);
+    int send(Functor temp);
+    std::shared_ptr<Buffer> m_buffer;
 
 protected:
     int m_fd;
     ReadFunctor m_read_callback;
     //receiving buffer
-    std::shared_ptr<Buffer> m_buffer;
     int m_thread_id;
     BaseServer *m_server;
 };
