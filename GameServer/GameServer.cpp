@@ -105,7 +105,7 @@ int DemoServer::parsing_and_send(const char *pszInCode, const int iInCodeSize, i
 
 */
 
-GameServer::GameServer(std::string ip, int port, ReadFunctor read_func)
+GameServer::GameServer(std::string ip, int port)
 {
     m_server.reset(new BaseServer(ip, port, std::bind(m_on_message, this, std::placeholders::_1)));
 }
@@ -117,14 +117,14 @@ int GameServer::run()
     return 0;
 }
 
-int GameServer::m_on_message(const TCPSocket &con)
+int GameServer::m_on_message(TCPSocket &con)
 {
     //将函数扔入计算线程中
     //thread.run(parase(con));
-    parase(con);
+    get_one_code(con);
 }
 
-void GameServer::parase(const TCPSocket &con)
+void GameServer::get_one_code(TCPSocket &con)
 {
     int ret = 0;
     while (1)
@@ -135,8 +135,7 @@ void GameServer::parase(const TCPSocket &con)
         ret = con.m_buffer->get_one_code(const_cast<char *>(m_sRvMsgBuf.c_str()), data_size);
         if (ret > 0)
         {
-            solve(con, m_sRvMsgBuf);
-            //callback(m_sRvMsgBuf, data_size, m_fd);
+            solve(con, m_sRvMsgBuf, data_size);
             continue;
         }
         else if (ret < 0)
@@ -147,15 +146,66 @@ void GameServer::parase(const TCPSocket &con)
     }
 }
 
-void GameServer::solve(const TCPSocket &con, std::string &data)
+void GameServer::solve(TCPSocket &con, std::string &data, int datasize)
 {
     //基本逻辑处理->调用con的发送函数
-    printf("[GameServer][GameServer.cpp:%d][INFO]:Begin To Solve Message  ..........\n", __LINE__);
+    int bodySize = datasize - MESSAGE_HEAD_SIZE;
+    Reqest req;
+    req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
+    printf("[GameServer][GameServer.cpp:%d][INFO]:get_information:[%s]\n", __LINE__, req.message());
+    Response res;
+    res.set_message(req.message());
+
+    char data_[COMMON_BUFFER_SIZE];
+    MsgHead head;
+    head.m_message_len = res.ByteSize() + MESSAGE_HEAD_SIZE;
+    int codeLength = 0;
+    head.encode(data_, codeLength);
+    res.SerializePartialToArray(data_ + codeLength, res.ByteSize());
+
+    vector<int> deletePlayer;
+    for (unordered_map<int, PlayerInfo>::iterator iter = m_map_players.begin(); iter != m_map_players.end(); iter++)
+    {
+        int fd = m_map_players[iter->first].fd;
+        if (m_server->m_sockets_map.find(fd) == m_server->m_sockets_map.end())
+        {
+            printf("[GameServer][GameServer.cpp:%d][WARNING]:fd:[%d] is not in the map now,maybe is deleted\n", __LINE__, fd);
+            deletePlayer.emplace_back(iter->first);
+            continue;
+        }
+    }
+    for (vector<int>::iterator iter = deletePlayer.begin(); iter != deletePlayer.end(); iter++)
+        m_map_players.erase(*iter);
+
+    //ret = m_sockets_map[fd]->send_data(data, (size_t)head.m_message_len);
+    con.send(std::bind(&GameServer::send, this, data_, head.m_message_len));
+    //serialize();
 }
 
-void GameServer::send(const TCPSocket &con, std::string &data)
+void GameServer::serialize(TCPSocket &con, std::string &data, std::string &out)
 {
-    //基本逻辑处理->调用con的发送函数
-    printf("[GameServer][GameServer.cpp:%d][INFO]:Begin To Send Message  ..........\n", __LINE__);
-    con.send(data);
+    //序列化处理
+}
+
+void GameServer::parse(char *input, int &size)
+{
+    //反序列化处理
+}
+
+void GameServer::send(char *data, int size)
+{
+    int ret = 0;
+    for (unordered_map<int, PlayerInfo>::iterator iter = m_map_players.begin(); iter != m_map_players.end(); iter++)
+    {
+        int fd = m_map_players[iter->first].fd;
+        ret = m_server->m_sockets_map[fd]->send_data(data, size);
+        if (ret < success)
+        {
+            printf("[GameServer][GameServer.cpp:%d][ERROR]:Send error ret=%d,errno:%d ,strerror:%s,fd = %d\n", __LINE__, ret, errno, strerror(errno), fd);
+        }
+        if (ret > success)
+        {
+            printf("[GameServer][GameServer.cpp:%d][INFO]:Send try multi ret=%d, errno:%d ,strerror:%s, fd = %d\n", __LINE__, ret, errno, strerror(errno), fd);
+        }
+    }
 }

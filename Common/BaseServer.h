@@ -26,7 +26,6 @@ private:
     void do_pending_functions();
     void handle_read();
     int epoll_recv();
-    std::unordered_map<int, std::shared_ptr<TCPSocket>> m_sockets_map;
     std::shared_ptr<TCPSocket> m_server_socket;
     std::vector<Functor> m_pending_functor;
     ReadFunctor m_read_func;
@@ -36,6 +35,5 @@ private:
     int m_wake_fd;
     int m_thread_id;
     std::mutex m_mutex;
-    int m_wake_fd;
 };
 #endif

@@ -14,12 +14,14 @@ struct PlayerInfo
 class GameServer
 {
 public:
-    GameServer(std::string ip, int port, ReadFunctor read_func);
+    GameServer(std::string ip, int port);
     int run();
-    int m_on_message(const TCPSocket &con);
-    void parase(const TCPSocket &con);
-    void send(const TCPSocket &con, std::string &data);
-    void solve(const TCPSocket &con, std::string &data);
+    int m_on_message(TCPSocket &con);
+    void get_one_code(TCPSocket &con);
+    void solve(TCPSocket &con, std::string &data, int datasize);
+    void serialize(TCPSocket &con, std::string &data, std::string &out);
+    void parse(char *input, int &size);
+    void send(char *data, int size);
 
 private:
     std::shared_ptr<BaseServer> m_server;
