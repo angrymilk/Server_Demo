@@ -3,6 +3,7 @@
 //
 
 #include "Epoll.h"
+#include <stdio.h>
 #include <cstring>
 
 Epoll::Epoll() {}
@@ -48,6 +49,7 @@ int Epoll::epoll_add(int fd)
         return -1;
     }
     m_epoll_event.data.fd = fd;
+    printf("[Common][Epoll.cpp:%d]:Add Fd = [%d] !\n",__LINE__,fd);
     return epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, fd, &m_epoll_event);
 }
 

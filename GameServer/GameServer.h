@@ -3,7 +3,6 @@
 #include "../Common/BaseServer.h"
 #include "../Common/MesHead.h"
 #include "Player.h"
-#include "../Common/ThreadPool.h"
 #include "../Common/TCPSocket.h"
 struct PlayerInfo
 {
@@ -26,7 +25,5 @@ public:
 private:
     std::shared_ptr<BaseServer> m_server;
     std::unordered_map<int, PlayerInfo> m_map_players;
-    //ThreadPool m_thread_pool;
 };
-
 #endif

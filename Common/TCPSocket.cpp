@@ -320,24 +320,6 @@ int TCPSocket::process_data()
     }
 
     printf("[Common][TCPSocket.cpp:%d][INFO]:Get_One_Code And Process_CallBack\n", __LINE__);
-    /*
-    while (1)
-    {
-        size_t data_size = MAX_SS_PACKAGE_SIZE;
-        char m_sRvMsgBuf[MAX_SS_PACKAGE_SIZE];
-        ret = m_buffer->get_one_code(m_sRvMsgBuf, data_size);
-        if (ret > 0)
-        {
-            callback(m_sRvMsgBuf, data_size, m_fd);
-            continue;
-        }
-        else if (ret < 0)
-        {
-            printf("[Common][TCPSocket.cpp:%d][ERROR]:get_one_code failed. socket:%d errorCode:%d\n", __LINE__, m_fd, ret);
-        }
-        break;
-    }
-    */
     ret = m_read_callback(*this);
     if (ret)
     {

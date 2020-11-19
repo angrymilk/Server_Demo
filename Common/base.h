@@ -27,6 +27,7 @@
 #include <iostream>
 #include <string>
 #include <pthread.h>
+#include <sys/eventfd.h>
 
 #endif
 

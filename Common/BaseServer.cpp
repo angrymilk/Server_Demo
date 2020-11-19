@@ -2,6 +2,7 @@
 
 void BaseServer::do_pending_functions()
 {
+    printf("[Common][BaseServer.cpp:%d][INFO]:In do_pending_functions !!!\n", __LINE__);
     std::vector<Functor> functors;
     {
         std::lock_guard<std::mutex> lk(m_mutex);
@@ -11,6 +12,7 @@ void BaseServer::do_pending_functions()
     {
         functor();
     }
+    printf("[Common][BaseServer.cpp:%d][INFO]:Out do_pending_functions !!!\n", __LINE__);
 }
 
 int BaseServer::run()
@@ -35,16 +37,16 @@ void BaseServer::run_in_loop(Functor func)
         std::lock_guard<std::mutex> lk(m_mutex);
         m_pending_functor.push_back(std::move(func));
     }
-    wake_up_read();
+    wake_up_write();
 }
 
 void BaseServer::wake_up_write()
 {
-    string str = "0";
-    int ret = ::write(m_wake_fd, str.c_str(), 1);
+    uint64_t one = 1;
+    ssize_t ret = ::write(m_wake_fd, &one,  sizeof(one));
     if (ret < 0)
     {
-        printf("[Common][BaseServer.cpp:%d][ERROR]:Write wake_up_fd error error_code:[%d] !!!\n", __LINE__, ret);
+        printf("[Common][BaseServer.cpp:%d][ERROR]:Write wake_up_fd error errno:[%d]!!!\n", __LINE__, ret, errno);
         return;
     }
     printf("[Common][BaseServer.cpp:%d][INFO]:Write wake_up_fd num:[%d]\n", __LINE__, ret);
@@ -52,11 +54,11 @@ void BaseServer::wake_up_write()
 
 void BaseServer::wake_up_read()
 {
-    char buf[1000];
-    int ret = ::read(m_wake_fd, buf, 1000);
+    uint64_t one = 1;
+    ssize_t ret = ::read(m_wake_fd, &one, sizeof(one));
     if (ret < 0)
     {
-        printf("[Common][BaseServer.cpp:%d][ERROR]:Read wake_up_fd error error_code:[%d] !!!\n", __LINE__, ret);
+        printf("[Common][BaseServer.cpp:%d][ERROR]:Read wake_up_fd error errno:[%d]!!!\n", __LINE__, ret, errno);
         return;
     }
     printf("[Common][BaseServer.cpp:%d][INFO]:Read wake_up_fd num:[%d]\n", __LINE__, ret);
@@ -85,7 +87,15 @@ int BaseServer::init()
         return fail;
     }
 
+    if (m_epoll.epoll_add(m_wake_fd) < 0)
+    {
+        printf("[Common][BaseServer.cpp:%d][ERROR]:m_epoll.epoll_add wake_up_fd:%d failed\n", __LINE__, m_wake_fd);
+        return fail;
+    }
+
     m_sockets_map[m_server_socket->get_fd()] = m_server_socket;
+    m_sockets_map[m_wake_fd] = make_shared<TCPSocket>(this);
+    m_sockets_map[m_wake_fd]->set_socket_fd(m_wake_fd);
     return success;
 }
 
@@ -132,7 +142,6 @@ int BaseServer::epoll_recv()
         }
         else
         {
-            //int ret = pstSocket->process_data(std::bind(&BaseServer::parsing_and_send, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
             int ret = pstSocket->process_data();
             if (ret == -3)
             {

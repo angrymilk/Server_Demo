@@ -7,14 +7,19 @@
 class BaseServer
 {
 public:
-    //typedef std::function<void()> Functor;
     void loop();
     BaseServer(std::string ip, int port) : m_ip(ip), m_port(port)
     {
         m_server_socket.reset(new TCPSocket(this));
+        m_wake_fd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+        printf("[Common][BaseServer.h:%d][INFO]:New Fd=%d\n", __LINE__, m_wake_fd);
     }
 
-    ~BaseServer() {}
+    ~BaseServer()
+    {
+        ::close(m_wake_fd);
+    }
+
     int init();
     void run_in_loop(Functor func);
     int run();
