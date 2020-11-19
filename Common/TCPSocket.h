@@ -5,15 +5,15 @@
 #include "base.h"
 #include "Buffer.h"
 #include "util.h"
-#include "BaseServer.h"
+//#include "BaseServer.h"
 using namespace std;
 
-class TCPSocket;
-typedef std::function<int(TCPSocket &)> ReadFunctor;
+class BaseServer;
 
 class TCPSocket
 {
 public:
+    typedef std::function<int(TCPSocket &)> ReadFunctor;
     TCPSocket(BaseServer *server);
     TCPSocket(int fd, BaseServer *server, ReadFunctor rf);
     ~TCPSocket();

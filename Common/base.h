@@ -48,6 +48,8 @@ enum enmFdType
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 8888
 typedef void (*ServerSendCallBack)(int uin, int cmd_id, google::protobuf::Message &msg);
+//typedef void (*Functor)();
+typedef std::function<void()> Functor;
 enum
 {
     MAX_SOCKET_COUNT = 10240,

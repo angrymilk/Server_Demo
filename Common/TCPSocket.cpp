@@ -1,4 +1,5 @@
 #include "TCPSocket.h"
+#include "BaseServer.h"
 #include <netinet/tcp.h>
 #include <cstring>
 #include <cstdio>
@@ -78,7 +79,6 @@ int TCPSocket::recv_data()
     return ret;
 }
 
-/*
 int TCPSocket::send_data(char *data, size_t size)
 {
     int ret = 0;
@@ -100,7 +100,7 @@ int TCPSocket::send_data(char *data, size_t size)
 
     while (remainded > 0)
     {
-        sended = send(m_fd, pszTmp, (size_t)remainded, 0);
+        sended = ::send(m_fd, pszTmp, (size_t)remainded, 0);
         if (sended > 0)
         {
             pszTmp += sended;
@@ -126,7 +126,7 @@ int TCPSocket::send_data(char *data, size_t size)
     }
     return ret;
 }
-*/
+
 int TCPSocket::open_as_server(uint16_t port, char *ip)
 {
     printf("[Common][TCPSocket.cpp:%d][INFO]:Init Port:%d  IP:%s\n", __LINE__, port, ip);

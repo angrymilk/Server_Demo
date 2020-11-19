@@ -9,10 +9,7 @@ cd ${pwd}/Common
 make clean && make
 
 
-cd ${pwd}/DemoServer
-make clean && make
-
-cd ${pwd}/DemoClient
+cd ${pwd}/GameServer
 make clean && make
 
 mv ../Bin/* ../

@@ -16,7 +16,7 @@ class GameServer
 public:
     GameServer(std::string ip, int port);
     int run();
-    int m_on_message(TCPSocket &con);
+    int on_message(TCPSocket &con);
     void get_one_code(TCPSocket &con);
     void solve(TCPSocket &con, std::string &data, int datasize);
     void serialize(TCPSocket &con, std::string &data, std::string &out);

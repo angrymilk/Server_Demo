@@ -89,6 +89,11 @@ int BaseServer::init()
     return success;
 }
 
+void BaseServer::set_read_callback(TCPSocket::ReadFunctor read_func)
+{
+    m_read_func = read_func;
+}
+
 int BaseServer::epoll_recv()
 {
     int fd_count = m_epoll.epoll_wait(-1);

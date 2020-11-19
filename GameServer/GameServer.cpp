@@ -107,7 +107,8 @@ int DemoServer::parsing_and_send(const char *pszInCode, const int iInCodeSize, i
 
 GameServer::GameServer(std::string ip, int port)
 {
-    m_server.reset(new BaseServer(ip, port, std::bind(m_on_message, this, std::placeholders::_1)));
+    m_server.reset(new BaseServer(ip, port));
+    m_server->set_read_callback(std::bind(&GameServer::on_message, this, std::placeholders::_1));
 }
 
 int GameServer::run()
@@ -117,7 +118,7 @@ int GameServer::run()
     return 0;
 }
 
-int GameServer::m_on_message(TCPSocket &con)
+int GameServer::on_message(TCPSocket &con)
 {
     //将函数扔入计算线程中
     //thread.run(parase(con));

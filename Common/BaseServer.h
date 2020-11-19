@@ -3,13 +3,13 @@
 #include <map>
 #include "Epoll.h"
 #include "TCPSocket.h"
-typedef std::function<void()> Functor;
 
 class BaseServer
 {
 public:
+    //typedef std::function<void()> Functor;
     void loop();
-    BaseServer(std::string ip, int port, ReadFunctor read_func) : m_ip(ip), m_port(port), m_read_func(std::move(read_func))
+    BaseServer(std::string ip, int port) : m_ip(ip), m_port(port)
     {
         m_server_socket.reset(new TCPSocket(this));
     }
@@ -18,6 +18,7 @@ public:
     int init();
     void run_in_loop(Functor func);
     int run();
+    void set_read_callback(TCPSocket::ReadFunctor read_func);
     std::unordered_map<int, std::shared_ptr<TCPSocket>> m_sockets_map;
 
 private:
@@ -28,7 +29,7 @@ private:
     int epoll_recv();
     std::shared_ptr<TCPSocket> m_server_socket;
     std::vector<Functor> m_pending_functor;
-    ReadFunctor m_read_func;
+    TCPSocket::ReadFunctor m_read_func;
     std::string m_ip;
     int m_port;
     Epoll m_epoll;
