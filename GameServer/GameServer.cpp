@@ -3,6 +3,7 @@ GameServer::GameServer(std::string ip, int port)
 {
     m_server.reset(new BaseServer(ip, port));
     m_server->set_read_callback(std::bind(&GameServer::on_message, this, std::placeholders::_1));
+    m_thread_task.Start();
 }
 
 int GameServer::run()
@@ -15,8 +16,8 @@ int GameServer::run()
 int GameServer::on_message(TCPSocket &con)
 {
     //将函数扔入计算线程中
-    //thread.run(parase(con));
-    get_one_code(con);
+    m_thread_task.submit(std::bind(&GameServer::get_one_code, this, con));
+    //get_one_code(con);
 }
 
 void GameServer::get_one_code(TCPSocket &con)
