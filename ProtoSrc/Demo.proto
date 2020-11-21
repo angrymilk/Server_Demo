@@ -12,3 +12,33 @@ message Response{
   required int32 SrcPlayerId = 1;
   required string Message = 2;
 }
+
+message MoveReq{
+    string name = 1;
+    int32 dirx = 2;
+    int32 diry = 3;
+    int32 dirz = 4;
+    int32 trgx = 5;
+    int32 trgy = 6;
+    int32 trgz = 7;
+    int32 speed = 8;
+    int64 time = 9;
+    int32 hp = 10;
+    int32 hs = 11;
+    int32 attack_id = 12;
+}
+
+message MoveRsp{
+    string name = 1;
+    int32 dirx = 2;
+    int32 diry = 3;
+    int32 dirz = 4;
+    int32 trgx = 5;
+    int32 trgy = 6;
+    int32 trgz = 7;
+    int32 speed = 8;
+    int64 time = 9;
+    int32 hp = 10;
+    int32 hs = 11;
+    int32 attack_id = 12;
+}

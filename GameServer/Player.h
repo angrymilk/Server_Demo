@@ -6,7 +6,6 @@
 #include "../Common/MesHandle.h"
 #include <map>
 #include <cstdio>
-
 class Player
 {
 public:
@@ -14,12 +13,21 @@ public:
     {
         m_uin = uin;
     }
-
+    Player() {}
     ~Player();
 
     int uin();
+    int get_id() const
+    {
+        return m_uin;
+    }
 
-private:
+    int move();
+    int attack();
+    int assist();
+    std::string m_name;
     int m_uin;
+    int dirx, diry, dirz, trgx, trgy, trgz, speed, time, hp, hs, attack_id;
+    bool m_is_cheat;
 };
 #endif

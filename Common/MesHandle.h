@@ -9,13 +9,13 @@ template <class T>
 class MsgHandler
 {
 public:
-    typedef int (T::*funHandle)(std::function<void(int uin, int cmd_id, google::protobuf::Message &msg)> ServerSend, MsgHead &stHead, const char *body, const int len);
+    typedef int32_t (T::*funHandle)(MsgHead &stHead, const char *body, const int32_t len);
 
 private:
-    std::map<int, funHandle> m_mapRequest;
+    std::map<int32_t, funHandle> m_mapRequest;
 
 public:
-    void RegisterMsg(int MessageID, funHandle func)
+    void RegisterMsg(int32_t MessageID, funHandle func)
     {
         if (m_mapRequest.find(MessageID) != m_mapRequest.end())
         {
@@ -24,7 +24,8 @@ public:
         }
         m_mapRequest[MessageID] = func;
     }
-    funHandle get_func(int MessageID)
+
+    funHandle get_func(int32_t MessageID)
     {
         auto it = m_mapRequest.find(MessageID);
         if (it != m_mapRequest.end())
