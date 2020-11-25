@@ -1,5 +1,4 @@
 #include "Player.h"
-//#include "DemoServer.h"
 
 Player::~Player()
 {
