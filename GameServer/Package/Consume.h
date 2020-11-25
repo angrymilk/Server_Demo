@@ -8,12 +8,12 @@ public:
 
     int get_uid()
     {
-        return Item::get_id();
+        return Item::get_uid();
     }
 
     void set_uid(int id)
     {
-        Item::set_id(id);
+        Item::set_uid(id);
     }
 
     void set_eltem_type(EltemType type)
@@ -24,5 +24,23 @@ public:
     int get_eltem_type()
     {
         return Item::get_eltem_type();
+    }
+
+    int get_amount()
+    {
+        return Item::get_amount();
+    }
+
+    void set_amount(int num)
+    {
+        Item::set_amount(num);
+    }
+
+    void set_attribute(EltemModuleType mtype, EltemAttributeType type, int value)
+    {
+    }
+
+    int get_attribute(EltemModuleType mtype, EltemAttributeType type)
+    {
     }
 };

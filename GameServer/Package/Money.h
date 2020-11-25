@@ -8,21 +8,31 @@ public:
 
     int get_uid()
     {
-        return AbstracItem::get_id();
+        return AbstractItem::get_uid();
     }
 
     void set_uid(int id)
     {
-        AbstracItem::set_id(id);
+        AbstractItem::set_uid(id);
     }
 
     void set_eltem_type(EltemType type)
     {
-        AbstracItem::set_eltem_type(type);
+        AbstractItem::set_eltem_type(type);
     }
 
     int get_eltem_type()
     {
-        return AbstracItem::get_eltem_type();
+        return AbstractItem::get_eltem_type();
+    }
+
+    int get_amount()
+    {
+        return AbstractItem::get_amount();
+    }
+
+    void set_amount(int num)
+    {
+        AbstractItem::set_amount(num);
     }
 };

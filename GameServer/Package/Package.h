@@ -2,7 +2,7 @@
 #include "Consume.h"
 #include "Equip.h"
 #include "ItemFactory.h"
-
+#include <vector>
 class Package
 {
 public:
@@ -15,6 +15,7 @@ public:
         m_vec[1].resize(10);
         m_vec[2].resize(10);
     }
+
     void insert()
     {
     }
