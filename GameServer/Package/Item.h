@@ -33,6 +33,7 @@ private:
     EltemType m_eltem_type;
 };
 
+class Item;
 class ItemAttribute
 {
 public:
@@ -60,4 +61,5 @@ public:
 
 private:
     int uid;
+    std::unordered_map<EltemModuleType, std::shared_ptr<ItemAttribute>> m_map;
 };

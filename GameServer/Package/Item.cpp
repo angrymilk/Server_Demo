@@ -29,3 +29,13 @@ int ItemAttribute::get_attribute(EltemAttributeType type)
 {
     return m_attribute_map[type];
 }
+
+void Item::set_id(int id)
+{
+    AbstracItem::set_id(id);
+}
+
+int Item::get_id()
+{
+    return AbstracItem::get_id();
+}
