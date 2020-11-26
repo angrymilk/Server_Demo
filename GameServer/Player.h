@@ -6,6 +6,7 @@
 #include "../Common/MesHandle.h"
 #include <map>
 #include <cstdio>
+#include "Package/Package.h"
 
 class Player
 {
@@ -17,9 +18,12 @@ public:
 
     ~Player();
 
+    void set_uin(int id);
+
     int uin();
 
 private:
     int m_uin;
+    std::shared_ptr<Package> m_package;
 };
 #endif

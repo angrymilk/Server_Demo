@@ -2,6 +2,8 @@
 class Consume : public Item
 {
 public:
+    Consume(ItemInfo info) : Item(info) {}
+
     void init()
     {
     }
@@ -38,9 +40,11 @@ public:
 
     void set_attribute(EltemModuleType mtype, EltemAttributeType type, int value)
     {
+        Item::set_attribute(mtype, type, value);
     }
 
     int get_attribute(EltemModuleType mtype, EltemAttributeType type)
     {
+        return Item::get_attribute(mtype, type);
     }
 };

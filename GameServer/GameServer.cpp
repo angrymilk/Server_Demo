@@ -4,6 +4,8 @@ GameServer::GameServer(std::string ip, int port)
     m_server.reset(new BaseServer(ip, port));
     m_server->set_read_callback(std::bind(&GameServer::on_message, this, std::placeholders::_1));
     m_thread_task.Start();
+    m_map_players[0].fd = -1; //场景代表
+    m_map_players[0].player->set_uin(0);
 }
 
 int GameServer::run()
@@ -17,7 +19,6 @@ int GameServer::on_message(TCPSocket &con)
 {
     //将函数扔入计算线程中
     m_thread_task.submit(std::bind(&GameServer::get_one_code, this, con));
-    //get_one_code(con);
 }
 
 void GameServer::get_one_code(TCPSocket &con)
@@ -31,7 +32,7 @@ void GameServer::get_one_code(TCPSocket &con)
         ret = con.m_buffer->get_one_code(const_cast<char *>(m_sRvMsgBuf.c_str()), data_size);
         if (ret > 0)
         {
-            solve(con, m_sRvMsgBuf, data_size);
+            solve_data(con, m_sRvMsgBuf, data_size);
             continue;
         }
         else if (ret < 0)
@@ -71,6 +72,8 @@ void GameServer::solve(TCPSocket &con, std::string &data, int datasize)
     for (unordered_map<int, PlayerInfo>::iterator iter = m_map_players.begin(); iter != m_map_players.end(); iter++)
     {
         int fd = m_map_players[iter->first].fd;
+        if (fd == -1)
+            continue;
         if (m_server->m_sockets_map.find(fd) == m_server->m_sockets_map.end())
         {
             printf("[GameServer][GameServer.cpp:%d][WARNING]:fd:[%d] is not in the map now,maybe is deleted\n", __LINE__, fd);
@@ -84,6 +87,10 @@ void GameServer::solve(TCPSocket &con, std::string &data, int datasize)
     //ret = m_sockets_map[fd]->send_data(data, (size_t)head.m_message_len);
     con.send(std::bind(&GameServer::send, this, data_, head.m_message_len));
     //serialize();
+}
+
+void GameServer::solve_data(TCPSocket &con, std::string &data, int datasize)
+{
 }
 
 void GameServer::serialize(TCPSocket &con, std::string &data, std::string &out)
@@ -102,6 +109,8 @@ void GameServer::send(char *data, int size)
     for (unordered_map<int, PlayerInfo>::iterator iter = m_map_players.begin(); iter != m_map_players.end(); iter++)
     {
         int fd = m_map_players[iter->first].fd;
+        if (fd == -1)
+            continue;
         ret = m_server->m_sockets_map[fd]->send_data(data, size);
         if (ret < success)
         {

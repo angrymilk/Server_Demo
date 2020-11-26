@@ -59,6 +59,17 @@ void Item::set_eltem_type(EltemType type)
 {
     AbstractItem::set_eltem_type(type);
 }
+
+void Item::set_attribute(EltemModuleType mtype, EltemAttributeType type, int value)
+{
+    m_map[mtype]->set_attribute(type, value);
+}
+
+int Item::get_attribute(EltemModuleType mtype, EltemAttributeType type)
+{
+    return m_map[mtype]->get_attribute(type);
+}
+
 // ItemAttribute     #####################################################################################################
 void ItemAttribute::set_attribute(EltemAttributeType type, int value)
 {

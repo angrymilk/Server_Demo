@@ -19,6 +19,13 @@ public:
 class AbstractItem : public ItemInterface
 {
 public:
+    AbstractItem(EltemType eltem_type, int id) : m_eltem_type(eltem_type),
+                                                 m_count(0),
+                                                 m_save(true),
+                                                 uid(id)
+    {
+    }
+
     int get_eltem_type();
     void set_eltem_type(EltemType type);
     void set_attribute(EltemModuleType mtype, EltemAttributeType type, int value);
@@ -43,7 +50,14 @@ class Item;
 class ItemAttribute
 {
 public:
-    ItemAttribute(std::shared_ptr<Item> point) : m_item(point) {}
+    ItemAttribute(std::shared_ptr<Item> point, std::vector<EltemAttributeType> info, std::vector<int> values) : m_item(point)
+    {
+        for (int i = 0; i < info.size(); i++)
+        {
+            m_attribute_map[info[i]] = values[i];
+        }
+    }
+
     void set_attribute(EltemAttributeType type, int value);
     int get_attribute(EltemAttributeType type);
 
@@ -52,9 +66,17 @@ private:
     std::shared_ptr<Item> m_item;
 };
 
-class Item : public AbstractItem
+class Item : public AbstractItem, std::enable_shared_from_this<Item>
 {
 public:
+    Item(ItemInfo info) : AbstractItem(info.mtype, info.id)
+    {
+        for (int i = 0; i < info.mmotype.size(); i++)
+        {
+            m_map[info.mmotype[i]] = std::make_shared<ItemAttribute>(shared_from_this(), info.mattrtype[i], info.value[i]);
+        }
+    }
+
     int get_eltem_type();
     void set_eltem_type(EltemType type);
     void set_attribute(EltemModuleType mtype, EltemAttributeType type, int value);
