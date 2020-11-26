@@ -32,7 +32,10 @@ void GameServer::get_one_code(TCPSocket &con)
         ret = con.m_buffer->get_one_code(const_cast<char *>(m_sRvMsgBuf.c_str()), data_size);
         if (ret > 0)
         {
-            solve(con, m_sRvMsgBuf, data_size);
+            if (((data_size & ((1 << 20) & (1 << 21))) >> 20) == 1)
+                solve_add(con, m_sRvMsgBuf, data_size);
+            else if (((data_size & ((1 << 20) & (1 << 21))) >> 20) == 2)
+                solve_query(con, m_sRvMsgBuf, data_size);
             continue;
         }
         else if (ret < 0)
@@ -43,15 +46,15 @@ void GameServer::get_one_code(TCPSocket &con)
     }
 }
 
-void GameServer::solve(TCPSocket &con, std::string &data, int datasize)
+void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
 {
     //基本逻辑处理->调用con的发送函数
     int bodySize = (datasize & ((1 << 21) - 1)) - MESSAGE_HEAD_SIZE;
     int proto_type = (datasize & ((1 << 20) & (1 << 21))) >> 20;
-    printf("[GameServer][GameServer.cpp:%d][INFO]:proto_type = [%d]\n", proto_type);
+    printf("[GameServer][GameServer.cpp:%d][INFO]:proto_type = [%d]   message_len = [%d]\n", proto_type, bodySize);
+    /*
     string tmp;
     serialize(con, data, tmp, proto_type);
-    /*
     Reqest req;
     req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
     printf("[GameServer][GameServer.cpp:%d][INFO]:get_information:", __LINE__);
@@ -61,7 +64,7 @@ void GameServer::solve(TCPSocket &con, std::string &data, int datasize)
     {
         m_map_players[playerId].fd = con.get_fd();
     }
-*/
+
     Response res;
     res.set_message(req.message());
     res.set_srcplayerid(playerId);
@@ -91,9 +94,12 @@ void GameServer::solve(TCPSocket &con, std::string &data, int datasize)
     //ret = m_sockets_map[fd]->send_data(data, (size_t)head.m_message_len);
     con.send(std::bind(&GameServer::send, this, data_, head.m_message_len));
     //serialize();
+    */
+    Addreq req;
+    req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
 }
 
-void GameServer::solve_data(TCPSocket &con, std::string &data, int datasize)
+void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
 {
 }
 

@@ -26,7 +26,8 @@ public:
     void serialize(TCPSocket &con, std::string &data, std::string &out, int type);
     void parse(char *input, int &size, int type);
     void send(char *data, int size);
-    void solve_data(TCPSocket &con, std::string &data, int datasize);
+    void solve_add(TCPSocket &con, std::string &data, int datasize);
+    void solve_query(TCPSocket &con, std::string &data, int datasize);
     //场景物品初始化函数
     void scen_init();
     ThreadTask m_thread_task;

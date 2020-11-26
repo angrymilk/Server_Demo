@@ -29,6 +29,7 @@ public:
 private:
     int m_uin;
     std::shared_ptr<Package> m_package;
+    std::vector<std::shared_ptr<AbstractItem>> m_in_use; //在使用中的道具
     int m_attack;
     int m_hp;
 };
