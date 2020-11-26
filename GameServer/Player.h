@@ -29,5 +29,7 @@ public:
 private:
     int m_uin;
     std::shared_ptr<Package> m_package;
+    int m_attack;
+    int m_hp;
 };
 #endif

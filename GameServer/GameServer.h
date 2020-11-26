@@ -23,8 +23,8 @@ public:
     int on_message(TCPSocket &con);
     void get_one_code(TCPSocket &con);
     void solve(TCPSocket &con, std::string &data, int datasize);
-    void serialize(TCPSocket &con, std::string &data, std::string &out);
-    void parse(char *input, int &size);
+    void serialize(TCPSocket &con, std::string &data, std::string &out, int type);
+    void parse(char *input, int &size, int type);
     void send(char *data, int size);
     void solve_data(TCPSocket &con, std::string &data, int datasize);
     //场景物品初始化函数

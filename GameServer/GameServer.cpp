@@ -32,7 +32,7 @@ void GameServer::get_one_code(TCPSocket &con)
         ret = con.m_buffer->get_one_code(const_cast<char *>(m_sRvMsgBuf.c_str()), data_size);
         if (ret > 0)
         {
-            solve_data(con, m_sRvMsgBuf, data_size);
+            solve(con, m_sRvMsgBuf, data_size);
             continue;
         }
         else if (ret < 0)
@@ -46,7 +46,12 @@ void GameServer::get_one_code(TCPSocket &con)
 void GameServer::solve(TCPSocket &con, std::string &data, int datasize)
 {
     //基本逻辑处理->调用con的发送函数
-    int bodySize = datasize - MESSAGE_HEAD_SIZE;
+    int bodySize = (datasize & ((1 << 21) - 1)) - MESSAGE_HEAD_SIZE;
+    int proto_type = (datasize & ((1 << 20) & (1 << 21))) >> 20;
+    printf("[GameServer][GameServer.cpp:%d][INFO]:proto_type = [%d]\n", proto_type);
+    string tmp;
+    serialize(con, data, tmp, proto_type);
+    /*
     Reqest req;
     req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
     printf("[GameServer][GameServer.cpp:%d][INFO]:get_information:", __LINE__);
@@ -56,7 +61,7 @@ void GameServer::solve(TCPSocket &con, std::string &data, int datasize)
     {
         m_map_players[playerId].fd = con.get_fd();
     }
-
+*/
     Response res;
     res.set_message(req.message());
     res.set_srcplayerid(playerId);
@@ -83,7 +88,6 @@ void GameServer::solve(TCPSocket &con, std::string &data, int datasize)
     }
     for (vector<int>::iterator iter = deletePlayer.begin(); iter != deletePlayer.end(); iter++)
         m_map_players.erase(*iter);
-
     //ret = m_sockets_map[fd]->send_data(data, (size_t)head.m_message_len);
     con.send(std::bind(&GameServer::send, this, data_, head.m_message_len));
     //serialize();
@@ -93,12 +97,12 @@ void GameServer::solve_data(TCPSocket &con, std::string &data, int datasize)
 {
 }
 
-void GameServer::serialize(TCPSocket &con, std::string &data, std::string &out)
+void GameServer::serialize(TCPSocket &con, std::string &data, std::string &out, int type)
 {
     //序列化处理
 }
 
-void GameServer::parse(char *input, int &size)
+void GameServer::parse(char *input, int &size, int type)
 {
     //反序列化处理
 }

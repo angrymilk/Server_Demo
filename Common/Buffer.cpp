@@ -110,9 +110,10 @@ int Buffer::get_one_code(char *data, size_t &size)
         return -4;
     }
 
-    size = (size_t)code_size;
+    size = (size_t)(code_size & ((1 << 21) - 1));
     memcpy(data, &m_recv_buffer[m_recv_head], size);
-    m_recv_head += code_size;
+    m_recv_head += size;
+    size = (size_t)code_size;
     if (m_recv_tail == m_recv_head)
     {
         m_recv_head = 0;
