@@ -26,6 +26,7 @@ public:
     void serialize(TCPSocket &con, std::string &data, std::string &out);
     void parse(char *input, int &size);
     void send(char *data, int size);
+    void solve_data(TCPSocket &con, std::string &data, int datasize);
     ThreadTask m_thread_task;
 
 private:

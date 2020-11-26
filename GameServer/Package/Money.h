@@ -1,10 +1,13 @@
 #include "Item.h"
+
 class Money : public AbstractItem
 {
 public:
     void init()
     {
     }
+
+    Money(ItemInfo info) : AbstractItem(info.mtype, info.id) {}
 
     int get_uid()
     {

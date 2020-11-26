@@ -12,3 +12,11 @@ message Response{
   required int32 SrcPlayerId = 1;
   required string Message = 2;
 }
+
+message Dbrequest
+{
+  required int32 Operation = 1;
+  required int32 Uid = 2;
+  required int32 Eltemtype = 3;
+  required int32 Id = 4;
+}

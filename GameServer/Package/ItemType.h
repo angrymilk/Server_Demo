@@ -1,7 +1,11 @@
 #include <unordered_map>
+#include <iostream>
+#include <cstdlib> // 标准库
+#include <vector>
+
 enum EltemType
 {
-    Money,
+    eMoney,
     eCONSUME,
     eEQUIP,
     unused,
@@ -22,10 +26,16 @@ enum EltemModuleType
     unused,
 };
 
-struct iteminfo
+struct ItemInfo
 {
     EltemType mtype;
-    EltemAttributeType mattrtype;
-    EltemModuleType mmotype;
-    std::unordered_map<>;
+    std::vector<std::vector<EltemAttributeType>> mattrtype;
+    std::vector<std::vector<EltemAttributeType>> value;
+    std::vector<EltemModuleType> mmotype;
+    int id;
 };
+
+int generate()
+{
+    return rand();
+}
