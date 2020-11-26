@@ -27,6 +27,8 @@ public:
     void parse(char *input, int &size);
     void send(char *data, int size);
     void solve_data(TCPSocket &con, std::string &data, int datasize);
+    //场景物品初始化函数
+    void scen_init();
     ThreadTask m_thread_task;
 
 private:

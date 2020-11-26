@@ -22,6 +22,10 @@ public:
 
     int uin();
 
+    int add(ItemInfo info, int pos, int value);
+
+    std::shared_ptr<AbstractItem> consume(int id, int value);
+
 private:
     int m_uin;
     std::shared_ptr<Package> m_package;

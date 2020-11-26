@@ -1,6 +1,6 @@
 #include <unordered_map>
 #include <iostream>
-#include <cstdlib> // 标准库
+#include <cstdlib>
 #include <vector>
 
 enum EltemType
@@ -30,12 +30,7 @@ struct ItemInfo
 {
     EltemType mtype;
     std::vector<std::vector<EltemAttributeType>> mattrtype;
-    std::vector<std::vector<EltemAttributeType>> value;
+    std::vector<std::vector<int>> value;
     std::vector<EltemModuleType> mmotype;
     int id;
 };
-
-int generate()
-{
-    return rand();
-}

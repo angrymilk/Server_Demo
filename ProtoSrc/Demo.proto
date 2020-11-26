@@ -20,3 +20,25 @@ message Dbrequest
   required int32 Eltemtype = 3;
   required int32 Id = 4;
 }
+
+message Addreq
+{
+
+}
+
+message Addres
+{
+
+}
+
+message Consumereq
+{
+
+}
+
+message Consumereq
+{
+  
+}
+
+

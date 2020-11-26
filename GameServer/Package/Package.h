@@ -15,9 +15,11 @@ public:
         m_vec[1].resize(10);
         m_vec[2].resize(10);
     }
-
+    //这里的value代表的是物品个数，info中的value代表的是物品和道具属性的值
+    //如果物品之前已经在背包中有同样id的，那么直接就重叠，不然就在客户端传进来的pos中放入新的类型的背包
     int add(ItemInfo info, int pos, int value)
     {
+        int id = 0;
         if (info.mtype == EltemType::eMoney)
         {
             if (m_vec[0][0] == nullptr)
@@ -28,6 +30,8 @@ public:
         {
             if (m_posmap.find(info.id) != m_posmap.end())
             {
+                if (m_num[1] == 10)
+                    return -1;
                 pos = m_posmap[info.id].second;
                 m_vec[1][pos]->set_amount(value + m_vec[1][pos]->get_amount());
             }
@@ -41,6 +45,8 @@ public:
         {
             if (m_posmap.find(info.id) != m_posmap.end())
             {
+                if (m_num[2] == 10)
+                    return -1;
                 pos = m_posmap[info.id].second;
                 m_vec[2][pos]->set_amount(value + m_vec[2][pos]->get_amount());
             }
@@ -55,21 +61,32 @@ public:
         return 0;
     }
 
-    int consume(int id, int value)
+    std::shared_ptr<AbstractItem> consume(int id, int value)
     {
         if (m_posmap.find(id) != m_posmap.end())
         {
             int tmp = m_vec[m_posmap[id].first][m_posmap[id].second]->get_amount();
+            if (tmp < value)
+                return nullptr;
             m_vec[m_posmap[id].first][m_posmap[id].second]->set_amount(tmp - value);
+            auto p = m_vec[m_posmap[id].first][m_posmap[id].second];
+            return p;
+            if (m_vec[m_posmap[id].first][m_posmap[id].second]->get_amount() == 0)
+            {
+                auto p = m_vec[m_posmap[id].first][m_posmap[id].second];
+                m_vec[m_posmap[id].first][m_posmap[id].second].reset();
+                m_num[m_posmap[id].first]--;
+                m_posmap.erase(id);
+                return p;
+            }
         }
         else
-            return -1;
-        return 0;
+            return nullptr;
     }
 
 private:
     std::vector<std::vector<std::shared_ptr<AbstractItem>>> m_vec;
-    std::unordered_map<int, pair<int, int>> m_posmap;
+    std::unordered_map<int, std::pair<int, int>> m_posmap;
     std::vector<int> m_num;
     ItemFactory m_factory;
 };
