@@ -36,6 +36,8 @@ void GameServer::get_one_code(TCPSocket &con)
                 solve_add(con, m_sRvMsgBuf, data_size);
             else if (((data_size & ((1 << 20) & (1 << 21))) >> 20) == 2)
                 solve_query(con, m_sRvMsgBuf, data_size);
+            else if (((data_size & ((1 << 20) & (1 << 21))) >> 20) == 0)
+                regist(con, m_sRvMsgBuf, data_size);
             continue;
         }
         else if (ret < 0)
@@ -49,10 +51,11 @@ void GameServer::get_one_code(TCPSocket &con)
 void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
 {
     //基本逻辑处理->调用con的发送函数
-    int bodySize = (datasize & ((1 << 21) - 1)) - MESSAGE_HEAD_SIZE;
-    int proto_type = (datasize & ((1 << 20) & (1 << 21))) >> 20;
-    printf("[GameServer][GameServer.cpp:%d][INFO]:proto_type = [%d]   message_len = [%d]\n", proto_type, bodySize);
+    int bodySize = (datasize & ((1 << 20) - 1)) - MESSAGE_HEAD_SIZE;
     /*
+    int bodySize = (datasize & ((1 << 20) - 1)) - MESSAGE_HEAD_SIZE;
+    int proto_type = (datasize & ((1 << 20) & (1 << 21))) >> 20;
+    printf("[GameServer][GameServer.cpp:%d][INFO]:proto_type = [%d]   message_len = [%d]\n", __LINE__, proto_type, bodySize);
     string tmp;
     serialize(con, data, tmp, proto_type);
     Reqest req;
@@ -97,10 +100,56 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
     */
     Addreq req;
     req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
+    //printf("[GameServer][GameServer.cpp:%d][INFO]:UserId = [%d]   message_len = [%d]", __LINE__);
+    if (req.value() > 0)
+    {
+        if (m_map_players.find(req.uid()) == m_map_players.end())
+        {
+            printf("[GameServer][GameServer.cpp:%d][ERROR]:No Such Player = [%d]\n", __LINE__, req.uid());
+            return;
+        }
+        ItemInfo info;
+        info.id = req.id();
+        info.value = req.value();
+        info.mtype = req.eltemtype();
+        m_map_players[req.uid()].palyer->add(info, req.pos(), req.num(), req.dropfrom());
+    }
+    else
+    {
+        m_map_players[req.uid()].palyer->consume(req.uid(), req.eltemtype(), req.value(), req.dropfrom(), req.inuse());
+    }
+
+    Addres res;
+    res.set_ack(1);
+
+    char data_[COMMON_BUFFER_SIZE];
+    MsgHead head;
+    head.m_message_len = res.ByteSize() + MESSAGE_HEAD_SIZE;
+    int temp = head.m_message_len;
+    head.m_message_len = (head.m_message_len | (1 << 20));
+    int codeLength = 0;
+    head.encode(data_, codeLength);
+    res.SerializePartialToArray(data_ + temp, res.ByteSize());
+    con.send(std::bind(&GameServer::send, this, data_, temp));
 }
 
 void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
 {
+    int bodySize = (datasize & ((1 << 20) - 1)) - MESSAGE_HEAD_SIZE;
+    Packagereq req;
+    Packageres res;
+    req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
+    res.set_num(m_map_players[req.uid()].player->get_num(req.id()));
+
+    char data_[COMMON_BUFFER_SIZE];
+    MsgHead head;
+    head.m_message_len = res.ByteSize() + MESSAGE_HEAD_SIZE;
+    int temp = head.m_message_len;
+    head.m_message_len = (head.m_message_len | (1 << 21));
+    int codeLength = 0;
+    head.encode(data_, codeLength);
+    res.SerializePartialToArray(data_ + temp, res.ByteSize());
+    con.send(std::bind(&GameServer::send, this, data_, temp));
 }
 
 void GameServer::serialize(TCPSocket &con, std::string &data, std::string &out, int type)

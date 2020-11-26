@@ -30,8 +30,8 @@ message Addreq
   required int32 Id = 4;                         //物品的id类型
   optional int32 Usemoney = 5;                   //道具或者消耗品是不是通过金钱获取的
   optional int32 Pos = 6;                        //在背包的放置位置
-  optional int32 Inuse = 7;                      //道具是扔了还是从背包中拿出使用
-  optional int32 Dropfrom = 8;                   //道具从使用中丢弃还是直接从背包中丢弃
+  optional bool Inuse = 7;                      //道具是扔了还是从背包中拿出使用
+  optional bool Dropfrom = 8;                   //道具从使用中丢弃还是直接从背包中丢弃
   repeated int32 Eltemattributetype = 9;
   repeated int32 Eltemattributevalue = 10;
 }
@@ -44,14 +44,13 @@ message Addres
 //客户端物品查询请求
 message Packagereq
 {
-  required int32 Eltemtype = 1;                  //物品类型金钱，道具，消耗品
-  required int32 Uid = 2;                        //玩家id
+  required int32 Id = 1;                  //物品的id
+  required int32 Uid = 2;                 //玩家id
 }
 
 message Packageres
 {
   repeated int32 Num = 1;                        //物品数量
-  repeated int32 Id = 2;                         //物品的id
 }
 
 

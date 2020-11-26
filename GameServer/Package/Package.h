@@ -23,7 +23,10 @@ public:
         if (info.mtype == EltemType::eMoney)
         {
             if (m_vec[0][0] == nullptr)
+            {
                 m_vec[0][0] = m_factory.create(info);
+                m_posmap[info.id] = make_pair(0, 0);
+            }
             m_vec[0][0]->set_amount(value);
         }
         else if (info.mtype == EltemType::eEQUIP)
@@ -53,7 +56,7 @@ public:
             else
             {
                 m_vec[2][pos] = m_factory.create(info);
-                m_posmap[info.id] = make_pair(2, pos);
+                m_posmap[info.id] = std::make_pair(2, pos);
             }
         }
         else
@@ -82,6 +85,11 @@ public:
         }
         else
             return nullptr;
+    }
+
+    int get_num(int id)
+    {
+        return m_vec[m_posmap[id].first][m_posmap[id].second]->get_amount();
     }
 
 private:
