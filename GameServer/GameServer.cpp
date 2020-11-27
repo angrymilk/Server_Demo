@@ -63,7 +63,7 @@ void GameServer::regist(TCPSocket &con, std::string &data, int datasize)
     }
 
     Response res;
-    res.set_id = m_name_map[req.name()];
+    res.set_id(m_name_map[req.name()]);
     res.set_message(req.message());
 
     char data_[COMMON_BUFFER_SIZE];
@@ -169,12 +169,39 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
 {
     int bodySize = (datasize & ((1 << 20) - 1)) - MESSAGE_HEAD_SIZE;
     Packagereq req;
-    Packageres res;
+    //Packageres res;
     req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
-    res.set_num(m_map_players[req.uid()].player->get_num(req.id()));
 
+    //如果客户端的信息提示客户端需要redis中的所有数据,那么需要将所有的数据提交给客户端
+    if (req.init() == 1)
     {
+        int id = req.id();
+        int len;
+        char idque[4];
+        itoa(req.id(), idque, 4);
+        char *result;
+        m_redis_server->GetByBit(result, (void **)&result, &len);
+        Redisplayerinfo tmp;
+        tmp.ParseFromArray(result, len);
+        printf("从redis中读取客户端断线前的数据信息\n");
+        printf("################# Player Id = %d      Player Hp = %d    Player Attakc = %d   ###############\n", tmp.id(), tmp.hp(), tmp.attack());
+        for (int i = 0; i < tmp.inuse_size(); i++)
+        {
+            Attributeitempro temp = tmp.inuse_list(i);
+            printf("################# 正在处于使用中的道具 道具id: %d      道具数量: %d\n", temp.id(), temp.amount());
+        }
+        printf("背包中的物品类型id 0:代表金钱  1:代表道具  2:代表消耗品\n");
+        Packagepro packageinfo = tmp.package();
+        for (int i = 0; i < packageinfo.attributeitempro_size(); i++)
+        {
+            Attributeitempro temp = packageinfo.itempro_list(i);
+            printf("################# 背包中的物品id: %d      物品数量: %d   物品类型: %d\n", temp.id(), temp.amount(), temp.eltemtype());
+        }
     }
+
+    Response res;
+    res.set_ack(1);
+
     char data_[COMMON_BUFFER_SIZE];
     MsgHead head;
     head.m_message_len = res.ByteSize() + MESSAGE_HEAD_SIZE;

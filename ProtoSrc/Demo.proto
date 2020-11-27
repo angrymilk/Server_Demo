@@ -4,7 +4,7 @@ syntax = "proto2";
 message Reqest {
   required string Name = 1;
   required string Password = 2;
-  required string Message =3;
+  required string Message = 3;
 }
 
 message Response{
@@ -44,6 +44,7 @@ message Addres
 message Packagereq
 {
   required int32 Uid = 1;                 //玩家id
+  required int32 Init = 2;                //0:代表不需要进行任何数据库的数据读取  1:代表需要从redis中读取数据   2:表示需要从数据库中读取数据
 }
 
 message Packageres
