@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "../Common/TCPSocket.h"
 #include "../Common/ThreadTask.h"
+#include "../Common/RedisServer.h"
 struct PlayerInfo
 {
     int fd;
@@ -35,5 +36,6 @@ public:
 private:
     std::shared_ptr<BaseServer> m_server;
     std::unordered_map<int, PlayerInfo> m_map_players;
+    std::shared_ptr<RedisServer> m_redis_server;
 };
 #endif
