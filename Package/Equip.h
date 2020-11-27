@@ -6,10 +6,6 @@ class Equip : public Item
 public:
     Equip(ItemInfo info) : Item(info) {}
 
-    void init()
-    {
-    }
-
     int get_uid()
     {
         return Item::get_uid();

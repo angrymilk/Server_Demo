@@ -6,10 +6,6 @@ class Consume : public Item
 public:
     Consume(ItemInfo info) : Item(info) {}
 
-    void init()
-    {
-    }
-
     int get_uid()
     {
         return Item::get_uid();

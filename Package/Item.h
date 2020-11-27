@@ -14,8 +14,6 @@ public:
     virtual void set_uid(int id) = 0;
     virtual void set_amount(int num) = 0;
     virtual int get_amount() = 0;
-    virtual void init() = 0;
-    virtual void to_string(std::string &out) = 0;
 };
 
 class AbstractItem : public ItemInterface
@@ -36,8 +34,6 @@ public:
     void set_uid(int id);
     void set_amount(int num);
     int get_amount();
-    void init();
-    void to_string(std::string &out);
     //扩展标记位
     int m_flag_bit;
 
@@ -68,7 +64,6 @@ public:
     int get_amount();
     int get_uid();
     void set_uid(int id);
-    void init();
     //扩展标记位
     int m_flag_bit;
 

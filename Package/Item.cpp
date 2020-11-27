@@ -29,6 +29,14 @@ int AbstractItem::get_amount()
 {
     return m_count;
 }
+
+int AbstractItem::get_attribute(EltemModuleType mtype, EltemAttributeType type)
+{
+}
+
+void AbstractItem::set_attribute(EltemModuleType mtype, EltemAttributeType type, int value)
+{
+}
 // Item    ##########################################################################################################
 void Item::set_uid(int id)
 {
