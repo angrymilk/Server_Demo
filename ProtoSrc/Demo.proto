@@ -20,6 +20,13 @@ message Dbrequest
   required int32 Id = 4;
 }
 
+message Modelinfo
+{
+  required int32 Modeltype = 1;
+  repeated int32 Attributetype = 2;
+  repeated int32 Attributetypevalue = 3;
+}
+
 //客户端物品操作请求
 message Addreq
 {
@@ -31,8 +38,7 @@ message Addreq
   optional int32 Pos = 6;                        //在背包的放置位置
   optional bool Inuse = 7;                       //道具是扔了还是从背包中拿出使用
   optional bool Dropfrom = 8;                    //道具从使用中丢弃还是直接从背包中丢弃
-  repeated int32 Eltemattributetype = 9;
-  repeated int32 Eltemattributevalue = 10;
+  repeated Modelinfo Mode = 9;
 }
 
 message Addres

@@ -46,7 +46,7 @@ struct TableStruct_Demo_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[10]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[11]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -65,6 +65,9 @@ extern AttributeitemproDefaultTypeInternal _Attributeitempro_default_instance_;
 class Dbrequest;
 class DbrequestDefaultTypeInternal;
 extern DbrequestDefaultTypeInternal _Dbrequest_default_instance_;
+class Modelinfo;
+class ModelinfoDefaultTypeInternal;
+extern ModelinfoDefaultTypeInternal _Modelinfo_default_instance_;
 class Packagepro;
 class PackageproDefaultTypeInternal;
 extern PackageproDefaultTypeInternal _Packagepro_default_instance_;
@@ -88,6 +91,7 @@ template<> ::Addreq* Arena::CreateMaybeMessage<::Addreq>(Arena*);
 template<> ::Addres* Arena::CreateMaybeMessage<::Addres>(Arena*);
 template<> ::Attributeitempro* Arena::CreateMaybeMessage<::Attributeitempro>(Arena*);
 template<> ::Dbrequest* Arena::CreateMaybeMessage<::Dbrequest>(Arena*);
+template<> ::Modelinfo* Arena::CreateMaybeMessage<::Modelinfo>(Arena*);
 template<> ::Packagepro* Arena::CreateMaybeMessage<::Packagepro>(Arena*);
 template<> ::Packagereq* Arena::CreateMaybeMessage<::Packagereq>(Arena*);
 template<> ::Packageres* Arena::CreateMaybeMessage<::Packageres>(Arena*);
@@ -669,6 +673,202 @@ class Dbrequest PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class Modelinfo PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Modelinfo) */ {
+ public:
+  inline Modelinfo() : Modelinfo(nullptr) {}
+  virtual ~Modelinfo();
+
+  Modelinfo(const Modelinfo& from);
+  Modelinfo(Modelinfo&& from) noexcept
+    : Modelinfo() {
+    *this = ::std::move(from);
+  }
+
+  inline Modelinfo& operator=(const Modelinfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Modelinfo& operator=(Modelinfo&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance);
+  }
+  inline ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const Modelinfo& default_instance();
+
+  static inline const Modelinfo* internal_default_instance() {
+    return reinterpret_cast<const Modelinfo*>(
+               &_Modelinfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(Modelinfo& a, Modelinfo& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Modelinfo* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Modelinfo* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Modelinfo* New() const final {
+    return CreateMaybeMessage<Modelinfo>(nullptr);
+  }
+
+  Modelinfo* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<Modelinfo>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const Modelinfo& from);
+  void MergeFrom(const Modelinfo& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Modelinfo* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Modelinfo";
+  }
+  protected:
+  explicit Modelinfo(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_Demo_2eproto);
+    return ::descriptor_table_Demo_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kAttributetypeFieldNumber = 2,
+    kAttributetypevalueFieldNumber = 3,
+    kModeltypeFieldNumber = 1,
+  };
+  // repeated int32 Attributetype = 2;
+  int attributetype_size() const;
+  private:
+  int _internal_attributetype_size() const;
+  public:
+  void clear_attributetype();
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_attributetype(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+      _internal_attributetype() const;
+  void _internal_add_attributetype(::PROTOBUF_NAMESPACE_ID::int32 value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+      _internal_mutable_attributetype();
+  public:
+  ::PROTOBUF_NAMESPACE_ID::int32 attributetype(int index) const;
+  void set_attributetype(int index, ::PROTOBUF_NAMESPACE_ID::int32 value);
+  void add_attributetype(::PROTOBUF_NAMESPACE_ID::int32 value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+      attributetype() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+      mutable_attributetype();
+
+  // repeated int32 Attributetypevalue = 3;
+  int attributetypevalue_size() const;
+  private:
+  int _internal_attributetypevalue_size() const;
+  public:
+  void clear_attributetypevalue();
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_attributetypevalue(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+      _internal_attributetypevalue() const;
+  void _internal_add_attributetypevalue(::PROTOBUF_NAMESPACE_ID::int32 value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+      _internal_mutable_attributetypevalue();
+  public:
+  ::PROTOBUF_NAMESPACE_ID::int32 attributetypevalue(int index) const;
+  void set_attributetypevalue(int index, ::PROTOBUF_NAMESPACE_ID::int32 value);
+  void add_attributetypevalue(::PROTOBUF_NAMESPACE_ID::int32 value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+      attributetypevalue() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+      mutable_attributetypevalue();
+
+  // required int32 Modeltype = 1;
+  bool has_modeltype() const;
+  private:
+  bool _internal_has_modeltype() const;
+  public:
+  void clear_modeltype();
+  ::PROTOBUF_NAMESPACE_ID::int32 modeltype() const;
+  void set_modeltype(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_modeltype() const;
+  void _internal_set_modeltype(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Modelinfo)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 > attributetype_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 > attributetypevalue_;
+  ::PROTOBUF_NAMESPACE_ID::int32 modeltype_;
+  friend struct ::TableStruct_Demo_2eproto;
+};
+// -------------------------------------------------------------------
+
 class Addreq PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Addreq) */ {
  public:
@@ -717,7 +917,7 @@ class Addreq PROTOBUF_FINAL :
                &_Addreq_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   friend void swap(Addreq& a, Addreq& b) {
     a.Swap(&b);
@@ -788,8 +988,7 @@ class Addreq PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kEltemattributetypeFieldNumber = 9,
-    kEltemattributevalueFieldNumber = 10,
+    kModeFieldNumber = 9,
     kEltemtypeFieldNumber = 1,
     kValueFieldNumber = 2,
     kUidFieldNumber = 3,
@@ -799,49 +998,23 @@ class Addreq PROTOBUF_FINAL :
     kInuseFieldNumber = 7,
     kDropfromFieldNumber = 8,
   };
-  // repeated int32 Eltemattributetype = 9;
-  int eltemattributetype_size() const;
+  // repeated .Modelinfo Mode = 9;
+  int mode_size() const;
   private:
-  int _internal_eltemattributetype_size() const;
+  int _internal_mode_size() const;
   public:
-  void clear_eltemattributetype();
+  void clear_mode();
+  ::Modelinfo* mutable_mode(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Modelinfo >*
+      mutable_mode();
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_eltemattributetype(int index) const;
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
-      _internal_eltemattributetype() const;
-  void _internal_add_eltemattributetype(::PROTOBUF_NAMESPACE_ID::int32 value);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
-      _internal_mutable_eltemattributetype();
+  const ::Modelinfo& _internal_mode(int index) const;
+  ::Modelinfo* _internal_add_mode();
   public:
-  ::PROTOBUF_NAMESPACE_ID::int32 eltemattributetype(int index) const;
-  void set_eltemattributetype(int index, ::PROTOBUF_NAMESPACE_ID::int32 value);
-  void add_eltemattributetype(::PROTOBUF_NAMESPACE_ID::int32 value);
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
-      eltemattributetype() const;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
-      mutable_eltemattributetype();
-
-  // repeated int32 Eltemattributevalue = 10;
-  int eltemattributevalue_size() const;
-  private:
-  int _internal_eltemattributevalue_size() const;
-  public:
-  void clear_eltemattributevalue();
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_eltemattributevalue(int index) const;
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
-      _internal_eltemattributevalue() const;
-  void _internal_add_eltemattributevalue(::PROTOBUF_NAMESPACE_ID::int32 value);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
-      _internal_mutable_eltemattributevalue();
-  public:
-  ::PROTOBUF_NAMESPACE_ID::int32 eltemattributevalue(int index) const;
-  void set_eltemattributevalue(int index, ::PROTOBUF_NAMESPACE_ID::int32 value);
-  void add_eltemattributevalue(::PROTOBUF_NAMESPACE_ID::int32 value);
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
-      eltemattributevalue() const;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
-      mutable_eltemattributevalue();
+  const ::Modelinfo& mode(int index) const;
+  ::Modelinfo* add_mode();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Modelinfo >&
+      mode() const;
 
   // required int32 Eltemtype = 1;
   bool has_eltemtype() const;
@@ -959,8 +1132,7 @@ class Addreq PROTOBUF_FINAL :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 > eltemattributetype_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 > eltemattributevalue_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Modelinfo > mode_;
   ::PROTOBUF_NAMESPACE_ID::int32 eltemtype_;
   ::PROTOBUF_NAMESPACE_ID::int32 value_;
   ::PROTOBUF_NAMESPACE_ID::int32 uid_;
@@ -1021,7 +1193,7 @@ class Addres PROTOBUF_FINAL :
                &_Addres_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   friend void swap(Addres& a, Addres& b) {
     a.Swap(&b);
@@ -1169,7 +1341,7 @@ class Packagereq PROTOBUF_FINAL :
                &_Packagereq_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(Packagereq& a, Packagereq& b) {
     a.Swap(&b);
@@ -1335,7 +1507,7 @@ class Packageres PROTOBUF_FINAL :
                &_Packageres_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(Packageres& a, Packageres& b) {
     a.Swap(&b);
@@ -1491,7 +1663,7 @@ class Attributeitempro PROTOBUF_FINAL :
                &_Attributeitempro_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(Attributeitempro& a, Attributeitempro& b) {
     a.Swap(&b);
@@ -1696,7 +1868,7 @@ class Packagepro PROTOBUF_FINAL :
                &_Packagepro_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    9;
 
   friend void swap(Packagepro& a, Packagepro& b) {
     a.Swap(&b);
@@ -1848,7 +2020,7 @@ class Redisplayerinfo PROTOBUF_FINAL :
                &_Redisplayerinfo_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    10;
 
   friend void swap(Redisplayerinfo& a, Redisplayerinfo& b) {
     a.Swap(&b);
@@ -2472,6 +2644,132 @@ inline void Dbrequest::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
 
 // -------------------------------------------------------------------
 
+// Modelinfo
+
+// required int32 Modeltype = 1;
+inline bool Modelinfo::_internal_has_modeltype() const {
+  bool value = (_has_bits_[0] & 0x00000001u) != 0;
+  return value;
+}
+inline bool Modelinfo::has_modeltype() const {
+  return _internal_has_modeltype();
+}
+inline void Modelinfo::clear_modeltype() {
+  modeltype_ = 0;
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Modelinfo::_internal_modeltype() const {
+  return modeltype_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Modelinfo::modeltype() const {
+  // @@protoc_insertion_point(field_get:Modelinfo.Modeltype)
+  return _internal_modeltype();
+}
+inline void Modelinfo::_internal_set_modeltype(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _has_bits_[0] |= 0x00000001u;
+  modeltype_ = value;
+}
+inline void Modelinfo::set_modeltype(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_modeltype(value);
+  // @@protoc_insertion_point(field_set:Modelinfo.Modeltype)
+}
+
+// repeated int32 Attributetype = 2;
+inline int Modelinfo::_internal_attributetype_size() const {
+  return attributetype_.size();
+}
+inline int Modelinfo::attributetype_size() const {
+  return _internal_attributetype_size();
+}
+inline void Modelinfo::clear_attributetype() {
+  attributetype_.Clear();
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Modelinfo::_internal_attributetype(int index) const {
+  return attributetype_.Get(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Modelinfo::attributetype(int index) const {
+  // @@protoc_insertion_point(field_get:Modelinfo.Attributetype)
+  return _internal_attributetype(index);
+}
+inline void Modelinfo::set_attributetype(int index, ::PROTOBUF_NAMESPACE_ID::int32 value) {
+  attributetype_.Set(index, value);
+  // @@protoc_insertion_point(field_set:Modelinfo.Attributetype)
+}
+inline void Modelinfo::_internal_add_attributetype(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  attributetype_.Add(value);
+}
+inline void Modelinfo::add_attributetype(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_add_attributetype(value);
+  // @@protoc_insertion_point(field_add:Modelinfo.Attributetype)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+Modelinfo::_internal_attributetype() const {
+  return attributetype_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+Modelinfo::attributetype() const {
+  // @@protoc_insertion_point(field_list:Modelinfo.Attributetype)
+  return _internal_attributetype();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+Modelinfo::_internal_mutable_attributetype() {
+  return &attributetype_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+Modelinfo::mutable_attributetype() {
+  // @@protoc_insertion_point(field_mutable_list:Modelinfo.Attributetype)
+  return _internal_mutable_attributetype();
+}
+
+// repeated int32 Attributetypevalue = 3;
+inline int Modelinfo::_internal_attributetypevalue_size() const {
+  return attributetypevalue_.size();
+}
+inline int Modelinfo::attributetypevalue_size() const {
+  return _internal_attributetypevalue_size();
+}
+inline void Modelinfo::clear_attributetypevalue() {
+  attributetypevalue_.Clear();
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Modelinfo::_internal_attributetypevalue(int index) const {
+  return attributetypevalue_.Get(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Modelinfo::attributetypevalue(int index) const {
+  // @@protoc_insertion_point(field_get:Modelinfo.Attributetypevalue)
+  return _internal_attributetypevalue(index);
+}
+inline void Modelinfo::set_attributetypevalue(int index, ::PROTOBUF_NAMESPACE_ID::int32 value) {
+  attributetypevalue_.Set(index, value);
+  // @@protoc_insertion_point(field_set:Modelinfo.Attributetypevalue)
+}
+inline void Modelinfo::_internal_add_attributetypevalue(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  attributetypevalue_.Add(value);
+}
+inline void Modelinfo::add_attributetypevalue(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_add_attributetypevalue(value);
+  // @@protoc_insertion_point(field_add:Modelinfo.Attributetypevalue)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+Modelinfo::_internal_attributetypevalue() const {
+  return attributetypevalue_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+Modelinfo::attributetypevalue() const {
+  // @@protoc_insertion_point(field_list:Modelinfo.Attributetypevalue)
+  return _internal_attributetypevalue();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+Modelinfo::_internal_mutable_attributetypevalue() {
+  return &attributetypevalue_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+Modelinfo::mutable_attributetypevalue() {
+  // @@protoc_insertion_point(field_mutable_list:Modelinfo.Attributetypevalue)
+  return _internal_mutable_attributetypevalue();
+}
+
+// -------------------------------------------------------------------
+
 // Addreq
 
 // required int32 Eltemtype = 1;
@@ -2698,98 +2996,43 @@ inline void Addreq::set_dropfrom(bool value) {
   // @@protoc_insertion_point(field_set:Addreq.Dropfrom)
 }
 
-// repeated int32 Eltemattributetype = 9;
-inline int Addreq::_internal_eltemattributetype_size() const {
-  return eltemattributetype_.size();
+// repeated .Modelinfo Mode = 9;
+inline int Addreq::_internal_mode_size() const {
+  return mode_.size();
 }
-inline int Addreq::eltemattributetype_size() const {
-  return _internal_eltemattributetype_size();
+inline int Addreq::mode_size() const {
+  return _internal_mode_size();
 }
-inline void Addreq::clear_eltemattributetype() {
-  eltemattributetype_.Clear();
+inline void Addreq::clear_mode() {
+  mode_.Clear();
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Addreq::_internal_eltemattributetype(int index) const {
-  return eltemattributetype_.Get(index);
+inline ::Modelinfo* Addreq::mutable_mode(int index) {
+  // @@protoc_insertion_point(field_mutable:Addreq.Mode)
+  return mode_.Mutable(index);
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Addreq::eltemattributetype(int index) const {
-  // @@protoc_insertion_point(field_get:Addreq.Eltemattributetype)
-  return _internal_eltemattributetype(index);
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Modelinfo >*
+Addreq::mutable_mode() {
+  // @@protoc_insertion_point(field_mutable_list:Addreq.Mode)
+  return &mode_;
 }
-inline void Addreq::set_eltemattributetype(int index, ::PROTOBUF_NAMESPACE_ID::int32 value) {
-  eltemattributetype_.Set(index, value);
-  // @@protoc_insertion_point(field_set:Addreq.Eltemattributetype)
+inline const ::Modelinfo& Addreq::_internal_mode(int index) const {
+  return mode_.Get(index);
 }
-inline void Addreq::_internal_add_eltemattributetype(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  eltemattributetype_.Add(value);
+inline const ::Modelinfo& Addreq::mode(int index) const {
+  // @@protoc_insertion_point(field_get:Addreq.Mode)
+  return _internal_mode(index);
 }
-inline void Addreq::add_eltemattributetype(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_add_eltemattributetype(value);
-  // @@protoc_insertion_point(field_add:Addreq.Eltemattributetype)
+inline ::Modelinfo* Addreq::_internal_add_mode() {
+  return mode_.Add();
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
-Addreq::_internal_eltemattributetype() const {
-  return eltemattributetype_;
+inline ::Modelinfo* Addreq::add_mode() {
+  // @@protoc_insertion_point(field_add:Addreq.Mode)
+  return _internal_add_mode();
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
-Addreq::eltemattributetype() const {
-  // @@protoc_insertion_point(field_list:Addreq.Eltemattributetype)
-  return _internal_eltemattributetype();
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
-Addreq::_internal_mutable_eltemattributetype() {
-  return &eltemattributetype_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
-Addreq::mutable_eltemattributetype() {
-  // @@protoc_insertion_point(field_mutable_list:Addreq.Eltemattributetype)
-  return _internal_mutable_eltemattributetype();
-}
-
-// repeated int32 Eltemattributevalue = 10;
-inline int Addreq::_internal_eltemattributevalue_size() const {
-  return eltemattributevalue_.size();
-}
-inline int Addreq::eltemattributevalue_size() const {
-  return _internal_eltemattributevalue_size();
-}
-inline void Addreq::clear_eltemattributevalue() {
-  eltemattributevalue_.Clear();
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 Addreq::_internal_eltemattributevalue(int index) const {
-  return eltemattributevalue_.Get(index);
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 Addreq::eltemattributevalue(int index) const {
-  // @@protoc_insertion_point(field_get:Addreq.Eltemattributevalue)
-  return _internal_eltemattributevalue(index);
-}
-inline void Addreq::set_eltemattributevalue(int index, ::PROTOBUF_NAMESPACE_ID::int32 value) {
-  eltemattributevalue_.Set(index, value);
-  // @@protoc_insertion_point(field_set:Addreq.Eltemattributevalue)
-}
-inline void Addreq::_internal_add_eltemattributevalue(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  eltemattributevalue_.Add(value);
-}
-inline void Addreq::add_eltemattributevalue(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_add_eltemattributevalue(value);
-  // @@protoc_insertion_point(field_add:Addreq.Eltemattributevalue)
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
-Addreq::_internal_eltemattributevalue() const {
-  return eltemattributevalue_;
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
-Addreq::eltemattributevalue() const {
-  // @@protoc_insertion_point(field_list:Addreq.Eltemattributevalue)
-  return _internal_eltemattributevalue();
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
-Addreq::_internal_mutable_eltemattributevalue() {
-  return &eltemattributevalue_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
-Addreq::mutable_eltemattributevalue() {
-  // @@protoc_insertion_point(field_mutable_list:Addreq.Eltemattributevalue)
-  return _internal_mutable_eltemattributevalue();
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Modelinfo >&
+Addreq::mode() const {
+  // @@protoc_insertion_point(field_list:Addreq.Mode)
+  return mode_;
 }
 
 // -------------------------------------------------------------------
@@ -3326,6 +3569,8 @@ Redisplayerinfo::inuse() const {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

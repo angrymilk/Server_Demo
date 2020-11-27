@@ -33,11 +33,11 @@ public:
     int get_attack();
 
     std::shared_ptr<Package> get_package();
+    std::unordered_map<int, std::shared_ptr<AbstractItem>> m_in_use; //在使用中的道具(非背包部分的道具)
 
 private:
     int m_uin;
-    std::shared_ptr<Package> m_package;                              //非使用中的道具(背包中的道具)
-    std::unordered_map<int, std::shared_ptr<AbstractItem>> m_in_use; //在使用中的道具(非背包部分的道具)
+    std::shared_ptr<Package> m_package; //非使用中的道具(背包中的道具)
     int m_attack;
     int m_hp;
 };

@@ -15,6 +15,7 @@
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
 extern PROTOBUF_INTERNAL_EXPORT_Demo_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Attributeitempro_Demo_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_Demo_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Modelinfo_Demo_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_Demo_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_Packagepro_Demo_2eproto;
 class ReqestDefaultTypeInternal {
  public:
@@ -28,6 +29,10 @@ class DbrequestDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Dbrequest> _instance;
 } _Dbrequest_default_instance_;
+class ModelinfoDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Modelinfo> _instance;
+} _Modelinfo_default_instance_;
 class AddreqDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Addreq> _instance;
@@ -66,8 +71,9 @@ static void InitDefaultsscc_info_Addreq_Demo_2eproto() {
   }
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Addreq_Demo_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Addreq_Demo_2eproto}, {}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_Addreq_Demo_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 1, 0, InitDefaultsscc_info_Addreq_Demo_2eproto}, {
+      &scc_info_Modelinfo_Demo_2eproto.base,}};
 
 static void InitDefaultsscc_info_Addres_Demo_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -107,6 +113,19 @@ static void InitDefaultsscc_info_Dbrequest_Demo_2eproto() {
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Dbrequest_Demo_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Dbrequest_Demo_2eproto}, {}};
+
+static void InitDefaultsscc_info_Modelinfo_Demo_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::_Modelinfo_default_instance_;
+    new (ptr) ::Modelinfo();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Modelinfo_Demo_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Modelinfo_Demo_2eproto}, {}};
 
 static void InitDefaultsscc_info_Packagepro_Demo_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -189,7 +208,7 @@ static void InitDefaultsscc_info_Response_Demo_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Response_Demo_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Response_Demo_2eproto}, {}};
 
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Demo_2eproto[10];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Demo_2eproto[11];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_Demo_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_Demo_2eproto = nullptr;
 
@@ -227,6 +246,17 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Demo_2eproto::offsets[] PROTOB
   1,
   2,
   3,
+  PROTOBUF_FIELD_OFFSET(::Modelinfo, _has_bits_),
+  PROTOBUF_FIELD_OFFSET(::Modelinfo, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::Modelinfo, modeltype_),
+  PROTOBUF_FIELD_OFFSET(::Modelinfo, attributetype_),
+  PROTOBUF_FIELD_OFFSET(::Modelinfo, attributetypevalue_),
+  0,
+  ~0u,
+  ~0u,
   PROTOBUF_FIELD_OFFSET(::Addreq, _has_bits_),
   PROTOBUF_FIELD_OFFSET(::Addreq, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -240,8 +270,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Demo_2eproto::offsets[] PROTOB
   PROTOBUF_FIELD_OFFSET(::Addreq, pos_),
   PROTOBUF_FIELD_OFFSET(::Addreq, inuse_),
   PROTOBUF_FIELD_OFFSET(::Addreq, dropfrom_),
-  PROTOBUF_FIELD_OFFSET(::Addreq, eltemattributetype_),
-  PROTOBUF_FIELD_OFFSET(::Addreq, eltemattributevalue_),
+  PROTOBUF_FIELD_OFFSET(::Addreq, mode_),
   0,
   1,
   2,
@@ -250,7 +279,6 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Demo_2eproto::offsets[] PROTOB
   4,
   6,
   7,
-  ~0u,
   ~0u,
   PROTOBUF_FIELD_OFFSET(::Addres, _has_bits_),
   PROTOBUF_FIELD_OFFSET(::Addres, _internal_metadata_),
@@ -313,19 +341,21 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 0, 8, sizeof(::Reqest)},
   { 11, 18, sizeof(::Response)},
   { 20, 29, sizeof(::Dbrequest)},
-  { 33, 48, sizeof(::Addreq)},
-  { 58, 64, sizeof(::Addres)},
-  { 65, 72, sizeof(::Packagereq)},
-  { 74, -1, sizeof(::Packageres)},
-  { 80, 89, sizeof(::Attributeitempro)},
-  { 93, -1, sizeof(::Packagepro)},
-  { 99, 109, sizeof(::Redisplayerinfo)},
+  { 33, 41, sizeof(::Modelinfo)},
+  { 44, 58, sizeof(::Addreq)},
+  { 67, 73, sizeof(::Addres)},
+  { 74, 81, sizeof(::Packagereq)},
+  { 83, -1, sizeof(::Packageres)},
+  { 89, 98, sizeof(::Attributeitempro)},
+  { 102, -1, sizeof(::Packagepro)},
+  { 108, 118, sizeof(::Redisplayerinfo)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_Reqest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_Response_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_Dbrequest_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_Modelinfo_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_Addreq_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_Addres_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_Packagereq_default_instance_),
@@ -340,29 +370,31 @@ const char descriptor_table_protodef_Demo_2eproto[] PROTOBUF_SECTION_VARIABLE(pr
   "Password\030\002 \002(\t\022\017\n\007Message\030\003 \002(\t\"\'\n\010Respo"
   "nse\022\n\n\002Id\030\001 \002(\005\022\017\n\007Message\030\002 \002(\t\"J\n\tDbre"
   "quest\022\021\n\tOperation\030\001 \002(\005\022\013\n\003Uid\030\002 \002(\005\022\021\n"
-  "\tEltemtype\030\003 \002(\005\022\n\n\002Id\030\004 \002(\005\"\274\001\n\006Addreq\022"
-  "\021\n\tEltemtype\030\001 \002(\005\022\r\n\005Value\030\002 \002(\005\022\013\n\003Uid"
-  "\030\003 \002(\005\022\n\n\002Id\030\004 \002(\005\022\020\n\010Usemoney\030\005 \001(\010\022\013\n\003"
-  "Pos\030\006 \001(\005\022\r\n\005Inuse\030\007 \001(\010\022\020\n\010Dropfrom\030\010 \001"
-  "(\010\022\032\n\022Eltemattributetype\030\t \003(\005\022\033\n\023Eltema"
-  "ttributevalue\030\n \003(\005\"\025\n\006Addres\022\013\n\003Ack\030\001 \002"
-  "(\005\"\'\n\nPackagereq\022\013\n\003Uid\030\001 \002(\005\022\014\n\004Init\030\002 "
-  "\002(\005\"\031\n\nPackageres\022\013\n\003Num\030\001 \003(\005\"T\n\020Attrib"
-  "uteitempro\022\n\n\002Id\030\001 \002(\005\022\016\n\006Amount\030\002 \002(\005\022\021"
-  "\n\tEltemtype\030\003 \002(\005\022\021\n\tattribute\030\004 \003(\005\"0\n\n"
-  "Packagepro\022\"\n\007Itempro\030\001 \003(\0132\021.Attributei"
-  "tempro\"y\n\017Redisplayerinfo\022\n\n\002Hp\030\001 \002(\005\022\016\n"
-  "\006Attack\030\002 \002(\005\022\n\n\002Id\030\003 \002(\005\022\034\n\007Package\030\004 \002"
-  "(\0132\013.Packagepro\022 \n\005Inuse\030\005 \003(\0132\021.Attribu"
-  "teitempro"
+  "\tEltemtype\030\003 \002(\005\022\n\n\002Id\030\004 \002(\005\"Q\n\tModelinf"
+  "o\022\021\n\tModeltype\030\001 \002(\005\022\025\n\rAttributetype\030\002 "
+  "\003(\005\022\032\n\022Attributetypevalue\030\003 \003(\005\"\235\001\n\006Addr"
+  "eq\022\021\n\tEltemtype\030\001 \002(\005\022\r\n\005Value\030\002 \002(\005\022\013\n\003"
+  "Uid\030\003 \002(\005\022\n\n\002Id\030\004 \002(\005\022\020\n\010Usemoney\030\005 \001(\010\022"
+  "\013\n\003Pos\030\006 \001(\005\022\r\n\005Inuse\030\007 \001(\010\022\020\n\010Dropfrom\030"
+  "\010 \001(\010\022\030\n\004Mode\030\t \003(\0132\n.Modelinfo\"\025\n\006Addre"
+  "s\022\013\n\003Ack\030\001 \002(\005\"\'\n\nPackagereq\022\013\n\003Uid\030\001 \002("
+  "\005\022\014\n\004Init\030\002 \002(\005\"\031\n\nPackageres\022\013\n\003Num\030\001 \003"
+  "(\005\"T\n\020Attributeitempro\022\n\n\002Id\030\001 \002(\005\022\016\n\006Am"
+  "ount\030\002 \002(\005\022\021\n\tEltemtype\030\003 \002(\005\022\021\n\tattribu"
+  "te\030\004 \003(\005\"0\n\nPackagepro\022\"\n\007Itempro\030\001 \003(\0132"
+  "\021.Attributeitempro\"y\n\017Redisplayerinfo\022\n\n"
+  "\002Hp\030\001 \002(\005\022\016\n\006Attack\030\002 \002(\005\022\n\n\002Id\030\003 \002(\005\022\034\n"
+  "\007Package\030\004 \002(\0132\013.Packagepro\022 \n\005Inuse\030\005 \003"
+  "(\0132\021.Attributeitempro"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Demo_2eproto_deps[1] = {
 };
-static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_Demo_2eproto_sccs[10] = {
+static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_Demo_2eproto_sccs[11] = {
   &scc_info_Addreq_Demo_2eproto.base,
   &scc_info_Addres_Demo_2eproto.base,
   &scc_info_Attributeitempro_Demo_2eproto.base,
   &scc_info_Dbrequest_Demo_2eproto.base,
+  &scc_info_Modelinfo_Demo_2eproto.base,
   &scc_info_Packagepro_Demo_2eproto.base,
   &scc_info_Packagereq_Demo_2eproto.base,
   &scc_info_Packageres_Demo_2eproto.base,
@@ -372,10 +404,10 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_Dem
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Demo_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Demo_2eproto = {
-  false, false, descriptor_table_protodef_Demo_2eproto, "Demo.proto", 729,
-  &descriptor_table_Demo_2eproto_once, descriptor_table_Demo_2eproto_sccs, descriptor_table_Demo_2eproto_deps, 10, 0,
+  false, false, descriptor_table_protodef_Demo_2eproto, "Demo.proto", 781,
+  &descriptor_table_Demo_2eproto_once, descriptor_table_Demo_2eproto_sccs, descriptor_table_Demo_2eproto_deps, 11, 0,
   schemas, file_default_instances, TableStruct_Demo_2eproto::offsets,
-  file_level_metadata_Demo_2eproto, 10, file_level_enum_descriptors_Demo_2eproto, file_level_service_descriptors_Demo_2eproto,
+  file_level_metadata_Demo_2eproto, 11, file_level_enum_descriptors_Demo_2eproto, file_level_service_descriptors_Demo_2eproto,
 };
 
 // Force running AddDescriptors() at dynamic initialization time.
@@ -1347,6 +1379,284 @@ void Dbrequest::InternalSwap(Dbrequest* other) {
 
 // ===================================================================
 
+class Modelinfo::_Internal {
+ public:
+  using HasBits = decltype(std::declval<Modelinfo>()._has_bits_);
+  static void set_has_modeltype(HasBits* has_bits) {
+    (*has_bits)[0] |= 1u;
+  }
+  static bool MissingRequiredFields(const HasBits& has_bits) {
+    return ((has_bits[0] & 0x00000001) ^ 0x00000001) != 0;
+  }
+};
+
+Modelinfo::Modelinfo(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena),
+  attributetype_(arena),
+  attributetypevalue_(arena) {
+  SharedCtor();
+  RegisterArenaDtor(arena);
+  // @@protoc_insertion_point(arena_constructor:Modelinfo)
+}
+Modelinfo::Modelinfo(const Modelinfo& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      _has_bits_(from._has_bits_),
+      attributetype_(from.attributetype_),
+      attributetypevalue_(from.attributetypevalue_) {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  modeltype_ = from.modeltype_;
+  // @@protoc_insertion_point(copy_constructor:Modelinfo)
+}
+
+void Modelinfo::SharedCtor() {
+  modeltype_ = 0;
+}
+
+Modelinfo::~Modelinfo() {
+  // @@protoc_insertion_point(destructor:Modelinfo)
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+void Modelinfo::SharedDtor() {
+  GOOGLE_DCHECK(GetArena() == nullptr);
+}
+
+void Modelinfo::ArenaDtor(void* object) {
+  Modelinfo* _this = reinterpret_cast< Modelinfo* >(object);
+  (void)_this;
+}
+void Modelinfo::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void Modelinfo::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const Modelinfo& Modelinfo::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_Modelinfo_Demo_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void Modelinfo::Clear() {
+// @@protoc_insertion_point(message_clear_start:Modelinfo)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  attributetype_.Clear();
+  attributetypevalue_.Clear();
+  modeltype_ = 0;
+  _has_bits_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* Modelinfo::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  _Internal::HasBits has_bits{};
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+    switch (tag >> 3) {
+      // required int32 Modeltype = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          _Internal::set_has_modeltype(&has_bits);
+          modeltype_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // repeated int32 Attributetype = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            _internal_add_attributetype(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr));
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<16>(ptr));
+        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedInt32Parser(_internal_mutable_attributetype(), ptr, ctx);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // repeated int32 Attributetypevalue = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            _internal_add_attributetypevalue(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr));
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<24>(ptr));
+        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedInt32Parser(_internal_mutable_attributetypevalue(), ptr, ctx);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  _has_bits_.Or(has_bits);
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* Modelinfo::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Modelinfo)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  // required int32 Modeltype = 1;
+  if (cached_has_bits & 0x00000001u) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_modeltype(), target);
+  }
+
+  // repeated int32 Attributetype = 2;
+  for (int i = 0, n = this->_internal_attributetype_size(); i < n; i++) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_attributetype(i), target);
+  }
+
+  // repeated int32 Attributetypevalue = 3;
+  for (int i = 0, n = this->_internal_attributetypevalue_size(); i < n; i++) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_attributetypevalue(i), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Modelinfo)
+  return target;
+}
+
+size_t Modelinfo::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Modelinfo)
+  size_t total_size = 0;
+
+  // required int32 Modeltype = 1;
+  if (_internal_has_modeltype()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_modeltype());
+  }
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // repeated int32 Attributetype = 2;
+  {
+    size_t data_size = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      Int32Size(this->attributetype_);
+    total_size += 1 *
+                  ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(this->_internal_attributetype_size());
+    total_size += data_size;
+  }
+
+  // repeated int32 Attributetypevalue = 3;
+  {
+    size_t data_size = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      Int32Size(this->attributetypevalue_);
+    total_size += 1 *
+                  ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(this->_internal_attributetypevalue_size());
+    total_size += data_size;
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void Modelinfo::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:Modelinfo)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Modelinfo* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<Modelinfo>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:Modelinfo)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:Modelinfo)
+    MergeFrom(*source);
+  }
+}
+
+void Modelinfo::MergeFrom(const Modelinfo& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:Modelinfo)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  attributetype_.MergeFrom(from.attributetype_);
+  attributetypevalue_.MergeFrom(from.attributetypevalue_);
+  if (from._internal_has_modeltype()) {
+    _internal_set_modeltype(from._internal_modeltype());
+  }
+}
+
+void Modelinfo::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:Modelinfo)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Modelinfo::CopyFrom(const Modelinfo& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Modelinfo)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Modelinfo::IsInitialized() const {
+  if (_Internal::MissingRequiredFields(_has_bits_)) return false;
+  return true;
+}
+
+void Modelinfo::InternalSwap(Modelinfo* other) {
+  using std::swap;
+  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  attributetype_.InternalSwap(&other->attributetype_);
+  attributetypevalue_.InternalSwap(&other->attributetypevalue_);
+  swap(modeltype_, other->modeltype_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata Modelinfo::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
+
+// ===================================================================
+
 class Addreq::_Internal {
  public:
   using HasBits = decltype(std::declval<Addreq>()._has_bits_);
@@ -1381,8 +1691,7 @@ class Addreq::_Internal {
 
 Addreq::Addreq(::PROTOBUF_NAMESPACE_ID::Arena* arena)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena),
-  eltemattributetype_(arena),
-  eltemattributevalue_(arena) {
+  mode_(arena) {
   SharedCtor();
   RegisterArenaDtor(arena);
   // @@protoc_insertion_point(arena_constructor:Addreq)
@@ -1390,8 +1699,7 @@ Addreq::Addreq(::PROTOBUF_NAMESPACE_ID::Arena* arena)
 Addreq::Addreq(const Addreq& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
       _has_bits_(from._has_bits_),
-      eltemattributetype_(from.eltemattributetype_),
-      eltemattributevalue_(from.eltemattributevalue_) {
+      mode_(from.mode_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&eltemtype_, &from.eltemtype_,
     static_cast<size_t>(reinterpret_cast<char*>(&dropfrom_) -
@@ -1400,6 +1708,7 @@ Addreq::Addreq(const Addreq& from)
 }
 
 void Addreq::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_Addreq_Demo_2eproto.base);
   ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
       reinterpret_cast<char*>(&eltemtype_) - reinterpret_cast<char*>(this)),
       0, static_cast<size_t>(reinterpret_cast<char*>(&dropfrom_) -
@@ -1437,8 +1746,7 @@ void Addreq::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  eltemattributetype_.Clear();
-  eltemattributevalue_.Clear();
+  mode_.Clear();
   cached_has_bits = _has_bits_[0];
   if (cached_has_bits & 0x000000ffu) {
     ::memset(&eltemtype_, 0, static_cast<size_t>(
@@ -1521,34 +1829,16 @@ const char* Addreq::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::int
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // repeated int32 Eltemattributetype = 9;
+      // repeated .Modelinfo Mode = 9;
       case 9:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 72)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 74)) {
           ptr -= 1;
           do {
             ptr += 1;
-            _internal_add_eltemattributetype(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr));
+            ptr = ctx->ParseMessage(_internal_add_mode(), ptr);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<72>(ptr));
-        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 74) {
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedInt32Parser(_internal_mutable_eltemattributetype(), ptr, ctx);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // repeated int32 Eltemattributevalue = 10;
-      case 10:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 80)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            _internal_add_eltemattributevalue(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr));
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<80>(ptr));
-        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 82) {
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedInt32Parser(_internal_mutable_eltemattributevalue(), ptr, ctx);
-          CHK_(ptr);
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<74>(ptr));
         } else goto handle_unusual;
         continue;
       default: {
@@ -1629,16 +1919,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(8, this->_internal_dropfrom(), target);
   }
 
-  // repeated int32 Eltemattributetype = 9;
-  for (int i = 0, n = this->_internal_eltemattributetype_size(); i < n; i++) {
+  // repeated .Modelinfo Mode = 9;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->_internal_mode_size()); i < n; i++) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(9, this->_internal_eltemattributetype(i), target);
-  }
-
-  // repeated int32 Eltemattributevalue = 10;
-  for (int i = 0, n = this->_internal_eltemattributevalue_size(); i < n; i++) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(10, this->_internal_eltemattributevalue(i), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(9, this->_internal_mode(i), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1715,22 +2001,11 @@ size_t Addreq::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated int32 Eltemattributetype = 9;
-  {
-    size_t data_size = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      Int32Size(this->eltemattributetype_);
-    total_size += 1 *
-                  ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(this->_internal_eltemattributetype_size());
-    total_size += data_size;
-  }
-
-  // repeated int32 Eltemattributevalue = 10;
-  {
-    size_t data_size = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      Int32Size(this->eltemattributevalue_);
-    total_size += 1 *
-                  ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(this->_internal_eltemattributevalue_size());
-    total_size += data_size;
+  // repeated .Modelinfo Mode = 9;
+  total_size += 1UL * this->_internal_mode_size();
+  for (const auto& msg : this->mode_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
 
   cached_has_bits = _has_bits_[0];
@@ -1789,8 +2064,7 @@ void Addreq::MergeFrom(const Addreq& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  eltemattributetype_.MergeFrom(from.eltemattributetype_);
-  eltemattributevalue_.MergeFrom(from.eltemattributevalue_);
+  mode_.MergeFrom(from.mode_);
   cached_has_bits = from._has_bits_[0];
   if (cached_has_bits & 0x000000ffu) {
     if (cached_has_bits & 0x00000001u) {
@@ -1837,6 +2111,7 @@ void Addreq::CopyFrom(const Addreq& from) {
 
 bool Addreq::IsInitialized() const {
   if (_Internal::MissingRequiredFields(_has_bits_)) return false;
+  if (!::PROTOBUF_NAMESPACE_ID::internal::AllAreInitialized(mode_)) return false;
   return true;
 }
 
@@ -1844,8 +2119,7 @@ void Addreq::InternalSwap(Addreq* other) {
   using std::swap;
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
   swap(_has_bits_[0], other->_has_bits_[0]);
-  eltemattributetype_.InternalSwap(&other->eltemattributetype_);
-  eltemattributevalue_.InternalSwap(&other->eltemattributevalue_);
+  mode_.InternalSwap(&other->mode_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(Addreq, dropfrom_)
       + sizeof(Addreq::dropfrom_)
@@ -3489,6 +3763,9 @@ template<> PROTOBUF_NOINLINE ::Response* Arena::CreateMaybeMessage< ::Response >
 }
 template<> PROTOBUF_NOINLINE ::Dbrequest* Arena::CreateMaybeMessage< ::Dbrequest >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Dbrequest >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Modelinfo* Arena::CreateMaybeMessage< ::Modelinfo >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Modelinfo >(arena);
 }
 template<> PROTOBUF_NOINLINE ::Addreq* Arena::CreateMaybeMessage< ::Addreq >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Addreq >(arena);

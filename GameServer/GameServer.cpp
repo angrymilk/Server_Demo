@@ -92,13 +92,28 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
         }
         ItemInfo info;
         info.id = req.id();
-        info.value = req.value();
-        info.mtype = req.eltemtype();
-        m_map_players[req.uid()].player->add(info, req.pos(), req.num(), req.dropfrom());
+        info.mmotype.resize(req.mode_size());
+        info.value.resize(req.mode_size());
+        info.mattrtype.resize(req.mode_size());
+        for (int i = 0; i < req.mode_size(); i++)
+        {
+            Modelinfo *tmp = req.add_mode();
+
+            info.mmotype[i] = (EltemModuleType)tmp->modeltype();
+            info.mattrtype[i].resize(tmp->attributetype_size());
+            info.value[i].resize(tmp->attributetype_size());
+            for (int j = 0; j < tmp->attributetype_size(); j++)
+            {
+                info.value[i][j] = tmp->attributetypevalue(j);
+                info.mattrtype[i][j] = (EltemAttributeType)tmp->attributetype(j);
+            }
+        }
+        info.mtype = (EltemType)req.eltemtype();
+        m_map_players[req.uid()].player->add(info, req.pos(), req.value(), req.dropfrom());
     }
     else
     {
-        m_map_players[req.uid()].player->consume(req.uid(), req.eltemtype(), req.value(), req.dropfrom(), req.inuse());
+        m_map_players[req.uid()].player->consume(req.uid(), (EltemType)req.eltemtype(), req.value(), req.dropfrom(), req.inuse());
     }
     //############################################  进行数据格式化方便进行redis的数据落地  ########################################################
 
@@ -109,45 +124,46 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
     //存储目前正在使用的道具的信息
     for (unordered_map<int, std::shared_ptr<AbstractItem>>::iterator iter = m_map_players[req.uid()].player->m_in_use.begin(); iter != m_map_players[req.uid()].player->m_in_use.end(); iter++)
     {
-        Attributeitempro *temp = tmp.add_Attributeitempro();
+        Attributeitempro *temp = tmp.add_inuse();
 
         std::shared_ptr<AbstractItem> ptr = m_map_players[req.uid()].player->m_in_use[iter->first];
         temp->set_amount(ptr->get_amount());
         temp->set_id(ptr->get_uid());
-        temp->set_mtype(ptr->get_eltem_type());
-        temp->add_int32(ptr->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack));
-        temp->add_int32(ptr->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP));
-        temp->add_int32(ptr->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_Attack));
-        temp->add_int32(ptr->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_HP));
-        temp->add_int32(ptr->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_Attack));
-        temp->add_int32(ptr->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_HP));
+        temp->set_eltemtype(ptr->get_eltem_type());
+        temp->add_attribute(ptr->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack));
+        temp->add_attribute(ptr->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP));
+        temp->add_attribute(ptr->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_Attack));
+        temp->add_attribute(ptr->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_HP));
+        temp->add_attribute(ptr->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_Attack));
+        temp->add_attribute(ptr->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_HP));
     }
     //存储背包相关的信息
     std::shared_ptr<Package> ptr = m_map_players[req.uid()].player->get_package();
     std::vector<std::vector<std::shared_ptr<AbstractItem>>> vec = ptr->get_vec();
-    Packagepro *packagein = tmp.add_Packagepro();
+    //Packagepro *packagein = tmp.add_package();
+    Packagepro *packagein = tmp.mutable_package();
     for (int i = 0; i > vec.size(); i++)
     {
         for (int j = 0; j < vec[i].size(); j++)
         {
-            Attributeitempro *temp = packagein->add_Attributeitempro();
+            Attributeitempro *temp = packagein->add_itempro();
 
             temp->set_amount(vec[i][j]->get_amount());
             temp->set_id(vec[i][j]->get_uid());
-            temp->set_mtype(vec[i][j]->get_eltem_type());
-            temp->add_int32(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack));
-            temp->add_int32(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP));
-            temp->add_int32(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_Attack));
-            temp->add_int32(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_HP));
-            temp->add_int32(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_Attack));
-            temp->add_int32(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_HP));
+            temp->set_eltemtype(vec[i][j]->get_eltem_type());
+            temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack));
+            temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP));
+            temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_Attack));
+            temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_HP));
+            temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_Attack));
+            temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_HP));
         }
     }
 
     char key[4];
     char out[1001];
     m_redis_server->Connect();
-    itoa(tmp.id(), key, 4);
+    snprintf(key, 4, "%d", tmp.id());
     tmp.SerializePartialToArray(out, tmp.ByteSize());
     m_redis_server->SetByBit(key, out, tmp.ByteSize());
     //############################################################  结束数据格式化  ##################################################################
@@ -178,7 +194,7 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
         int id = req.uid();
         int len;
         char idque[4];
-        itoa(req.uid(), idque, 4);
+        snprintf(idque, 4, "%d", id);
         char *result;
         m_redis_server->GetByBit(result, (void **)&result, &len);
         Redisplayerinfo tmp;
@@ -187,14 +203,14 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
         printf("################# Player Id = %d      Player Hp = %d    Player Attakc = %d   ###############\n", tmp.id(), tmp.hp(), tmp.attack());
         for (int i = 0; i < tmp.inuse_size(); i++)
         {
-            Attributeitempro temp = tmp.inuse_list(i);
+            Attributeitempro temp = tmp.inuse(i);
             printf("################# 正在处于使用中的道具 道具id: %d      道具数量: %d\n", temp.id(), temp.amount());
         }
         printf("背包中的物品类型id 0:代表金钱  1:代表道具  2:代表消耗品\n");
         Packagepro packageinfo = tmp.package();
-        for (int i = 0; i < packageinfo.attributeitempro_size(); i++)
+        for (int i = 0; i < packageinfo.itempro_size(); i++)
         {
-            Attributeitempro temp = packageinfo.itempro_list(i);
+            Attributeitempro temp = packageinfo.itempro(i);
             printf("################# 背包中的物品id: %d      物品数量: %d   物品类型: %d\n", temp.id(), temp.amount(), temp.eltemtype());
         }
     }
