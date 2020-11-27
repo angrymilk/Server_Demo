@@ -7,7 +7,7 @@ AR	= ar
 ARFLAGS = cr
 CPPFLAGS= -g -lpthread -Wall $(INC) -fPIC -L/usr/lib64/ -lhiredis -lpthread `pkg-config --cflags --libs protobuf` -std=c++11 -Lpthread
 
-TARGET	= $(TARGET_DIR)/libcommon.a
+TARGET	= $(TARGET_DIR)/libpackage.a
 OBJ_DIR	= ./.objs
 
 INC	= -I$(COMMON_INCLUDE_DIR) -I$(INCLUDE_DIR)

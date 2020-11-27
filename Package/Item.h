@@ -1,3 +1,5 @@
+#ifndef ITEM_H
+#define ITEM_H
 #include "ItemType.h"
 #include <unordered_map>
 #include <memory>
@@ -92,3 +94,4 @@ public:
 private:
     std::unordered_map<EltemModuleType, std::shared_ptr<ItemAttribute>> m_map;
 };
+#endif

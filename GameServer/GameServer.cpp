@@ -175,10 +175,10 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
     //如果客户端的信息提示客户端需要redis中的所有数据,那么需要将所有的数据提交给客户端
     if (req.init() == 1)
     {
-        int id = req.id();
+        int id = req.uid();
         int len;
         char idque[4];
-        itoa(req.id(), idque, 4);
+        itoa(req.uid(), idque, 4);
         char *result;
         m_redis_server->GetByBit(result, (void **)&result, &len);
         Redisplayerinfo tmp;
@@ -199,7 +199,7 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
         }
     }
 
-    Response res;
+    Addres res;
     res.set_ack(1);
 
     char data_[COMMON_BUFFER_SIZE];

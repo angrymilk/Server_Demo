@@ -1,3 +1,5 @@
+#ifndef PACKAGE_H
+#define PACKAGE_H
 #include "Money.h"
 #include "Consume.h"
 #include "Equip.h"
@@ -103,3 +105,4 @@ private:
     std::vector<int> m_num;
     ItemFactory m_factory;
 };
+#endif

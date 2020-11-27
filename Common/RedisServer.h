@@ -5,7 +5,6 @@
 #include <string>
 #include <sstream>
 #include <hiredis/hiredis.h>
-#include "Player.h"
 class RedisServer
 {
 public:
