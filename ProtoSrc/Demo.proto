@@ -4,15 +4,11 @@ syntax = "proto2";
 message Reqest {
   required string Name = 1;
   required string Password = 2;
-}
-
-message Registpro
-{
-  reqiured int32 Playerid = 1;
+  required string Message =3;
 }
 
 message Response{
-  required int32 SrcPlayerId = 1;
+  required int32 Id = 1;
   required string Message = 2;
 }
 
@@ -31,7 +27,7 @@ message Addreq
   required int32 Value = 2;                      //增加的物品种数
   required int32 Uid = 3;                        //哪个玩家id的对应操作
   required int32 Id = 4;                         //物品的id类型
-  optional bool Usemoney = 5;                   //道具或者消耗品是不是通过金钱获取的
+  optional bool Usemoney = 5;                    //道具或者消耗品是不是通过金钱获取的
   optional int32 Pos = 6;                        //在背包的放置位置
   optional bool Inuse = 7;                       //道具是扔了还是从背包中拿出使用
   optional bool Dropfrom = 8;                    //道具从使用中丢弃还是直接从背包中丢弃
@@ -47,8 +43,7 @@ message Addres
 //客户端物品查询请求
 message Packagereq
 {
-  required int32 Id = 1;                  //物品的id
-  required int32 Uid = 2;                 //玩家id
+  required int32 Uid = 1;                 //玩家id
 }
 
 message Packageres

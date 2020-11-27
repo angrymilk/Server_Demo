@@ -58,7 +58,22 @@ void GameServer::regist(TCPSocket &con, std::string &data, int datasize)
     if (m_name_map.find(req.name()) == m_name_map.end())
     {
         m_name_map[req.name()] = rand();
+        m_map_players[m_name_map[req.name()]].fd = con.get_fd();
+        m_map_players[m_name_map[req.name()]].player = make_shared<Player>(new Player(m_name_map[req.name()]));
     }
+
+    Response res;
+    res.set_id = m_name_map[req.name()];
+    res.set_message(req.message());
+
+    char data_[COMMON_BUFFER_SIZE];
+    MsgHead head;
+    head.m_message_len = res.ByteSize() + MESSAGE_HEAD_SIZE;
+    int temp = head.m_message_len;
+    int codeLength = 0;
+    head.encode(data_, codeLength);
+    res.SerializePartialToArray(data_ + temp, res.ByteSize());
+    con.send(std::bind(&GameServer::send, this, data_, temp));
 }
 
 void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
@@ -158,6 +173,8 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
     req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
     res.set_num(m_map_players[req.uid()].player->get_num(req.id()));
 
+    {
+    }
     char data_[COMMON_BUFFER_SIZE];
     MsgHead head;
     head.m_message_len = res.ByteSize() + MESSAGE_HEAD_SIZE;
