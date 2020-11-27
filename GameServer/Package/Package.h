@@ -41,7 +41,7 @@ public:
             else
             {
                 m_vec[1][pos] = m_factory.create(info);
-                m_posmap[info.id] = make_pair(1, pos);
+                m_posmap[info.id] = std::make_pair(1, pos);
             }
         }
         else if (info.mtype == EltemType::eCONSUME)
@@ -90,6 +90,11 @@ public:
     int get_num(int id)
     {
         return m_vec[m_posmap[id].first][m_posmap[id].second]->get_amount();
+    }
+
+    std::vector<std::vector<std::shared_ptr<AbstractItem>>> get_vec()
+    {
+        return m_vec;
     }
 
 private:

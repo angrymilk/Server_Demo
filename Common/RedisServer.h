@@ -6,29 +6,6 @@
 #include <sstream>
 #include <hiredis/hiredis.h>
 #include "Player.h"
-
-struct RedisAbstractItemInfo
-{
-    int id;
-    int amount;
-    EltemType mtype;
-    int attribute[3][3];
-};
-
-struct RedisPackageInfo
-{
-    RedisAbstractItemInfo item[3][10];
-};
-
-struct RedisPlayerInfo
-{
-    int hp;
-    int attack;
-    int id;
-    RedisPackageInfo package;
-    RedisAbstractItemInfo inuse[10];
-};
-
 class RedisServer
 {
 public:

@@ -2,10 +2,13 @@ syntax = "proto2";
 
 //Reqest_Message
 message Reqest {
-  required int32 SrcPlayerId = 1;
-  required int32 DesPlayerId = 2;
-  required int32 MessageType = 3;
-  required string Message = 4;
+  required string Name = 1;
+  required string Password = 2;
+}
+
+message Registpro
+{
+  reqiured int32 Playerid = 1;
 }
 
 message Response{
@@ -28,10 +31,10 @@ message Addreq
   required int32 Value = 2;                      //增加的物品种数
   required int32 Uid = 3;                        //哪个玩家id的对应操作
   required int32 Id = 4;                         //物品的id类型
-  optional int32 Usemoney = 5;                   //道具或者消耗品是不是通过金钱获取的
+  optional bool Usemoney = 5;                   //道具或者消耗品是不是通过金钱获取的
   optional int32 Pos = 6;                        //在背包的放置位置
-  optional bool Inuse = 7;                      //道具是扔了还是从背包中拿出使用
-  optional bool Dropfrom = 8;                   //道具从使用中丢弃还是直接从背包中丢弃
+  optional bool Inuse = 7;                       //道具是扔了还是从背包中拿出使用
+  optional bool Dropfrom = 8;                    //道具从使用中丢弃还是直接从背包中丢弃
   repeated int32 Eltemattributetype = 9;
   repeated int32 Eltemattributevalue = 10;
 }
@@ -53,4 +56,24 @@ message Packageres
   repeated int32 Num = 1;                        //物品数量
 }
 
+message Attributeitempro
+{
+  required int32 Id = 1;
+  required int32 Amount = 2;
+  required int32 Eltemtype = 3;
+  repeated int32 attribute = 4;
+}
 
+message Packagepro
+{
+  repeated Attributeitempro Itempro = 1;
+}
+
+message Redisplayerinfo
+{
+  required int32 Hp = 1;
+  required int32 Attack = 2;
+  required int32 Id = 3;
+  required Packagepro Package = 4;
+  repeated Attributeitempro Inuse = 5;
+}

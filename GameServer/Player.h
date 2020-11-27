@@ -32,6 +32,8 @@ public:
 
     int get_attack();
 
+    std::shared_ptr<Package> get_package();
+
 private:
     int m_uin;
     std::shared_ptr<Package> m_package;                              //非使用中的道具(背包中的道具)

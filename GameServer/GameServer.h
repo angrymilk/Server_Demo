@@ -29,6 +29,7 @@ public:
     void send(char *data, int size);
     void solve_add(TCPSocket &con, std::string &data, int datasize);
     void solve_query(TCPSocket &con, std::string &data, int datasize);
+    void regist(TCPSocket &con, std::string &data, int datasize);
     //场景物品初始化函数
     void scen_init();
     ThreadTask m_thread_task;
@@ -37,5 +38,6 @@ private:
     std::shared_ptr<BaseServer> m_server;
     std::unordered_map<int, PlayerInfo> m_map_players;
     std::shared_ptr<RedisServer> m_redis_server;
+    std::unordered_map<string, int> m_name_map;
 };
 #endif

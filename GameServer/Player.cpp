@@ -76,3 +76,8 @@ int Player::get_hp()
 {
     return m_hp;
 }
+
+std::shared_ptr<Package> Player::get_package()
+{
+    return m_package;
+}

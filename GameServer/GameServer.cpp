@@ -1,6 +1,9 @@
 #include "GameServer.h"
+#include <stdio.h>
+#include <stdlib.h>
 GameServer::GameServer(std::string ip, int port)
 {
+    m_redis_server.reset(new RedisServer("127.0.0.1", 6379));
     m_server.reset(new BaseServer(ip, port));
     m_server->set_read_callback(std::bind(&GameServer::on_message, this, std::placeholders::_1));
     m_thread_task.Start();
@@ -48,56 +51,20 @@ void GameServer::get_one_code(TCPSocket &con)
     }
 }
 
+void GameServer::regist(TCPSocket &con, std::string &data, int datasize)
+{
+    Reqest req;
+    req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, datasize);
+    if (m_name_map.find(req.name()) == m_name_map.end())
+    {
+        m_name_map[req.name()] = rand();
+    }
+}
+
 void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
 {
     //基本逻辑处理->调用con的发送函数
     int bodySize = (datasize & ((1 << 20) - 1)) - MESSAGE_HEAD_SIZE;
-    /*
-    int bodySize = (datasize & ((1 << 20) - 1)) - MESSAGE_HEAD_SIZE;
-    int proto_type = (datasize & ((1 << 20) & (1 << 21))) >> 20;
-    printf("[GameServer][GameServer.cpp:%d][INFO]:proto_type = [%d]   message_len = [%d]\n", __LINE__, proto_type, bodySize);
-    string tmp;
-    serialize(con, data, tmp, proto_type);
-    Reqest req;
-    req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
-    printf("[GameServer][GameServer.cpp:%d][INFO]:get_information:", __LINE__);
-    std::cout << req.message() << "\n";
-    int playerId = req.srcplayerid();
-    if (m_map_players.find(playerId) == m_map_players.end())
-    {
-        m_map_players[playerId].fd = con.get_fd();
-    }
-
-    Response res;
-    res.set_message(req.message());
-    res.set_srcplayerid(playerId);
-
-    char data_[COMMON_BUFFER_SIZE];
-    MsgHead head;
-    head.m_message_len = res.ByteSize() + MESSAGE_HEAD_SIZE;
-    int codeLength = 0;
-    head.encode(data_, codeLength);
-    res.SerializePartialToArray(data_ + codeLength, res.ByteSize());
-
-    vector<int> deletePlayer;
-    for (unordered_map<int, PlayerInfo>::iterator iter = m_map_players.begin(); iter != m_map_players.end(); iter++)
-    {
-        int fd = m_map_players[iter->first].fd;
-        if (fd == -1)
-            continue;
-        if (m_server->m_sockets_map.find(fd) == m_server->m_sockets_map.end())
-        {
-            printf("[GameServer][GameServer.cpp:%d][WARNING]:fd:[%d] is not in the map now,maybe is deleted\n", __LINE__, fd);
-            deletePlayer.emplace_back(iter->first);
-            continue;
-        }
-    }
-    for (vector<int>::iterator iter = deletePlayer.begin(); iter != deletePlayer.end(); iter++)
-        m_map_players.erase(*iter);
-    //ret = m_sockets_map[fd]->send_data(data, (size_t)head.m_message_len);
-    con.send(std::bind(&GameServer::send, this, data_, head.m_message_len));
-    //serialize();
-    */
     Addreq req;
     req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
     //printf("[GameServer][GameServer.cpp:%d][INFO]:UserId = [%d]   message_len = [%d]", __LINE__);
@@ -112,13 +79,63 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
         info.id = req.id();
         info.value = req.value();
         info.mtype = req.eltemtype();
-        m_map_players[req.uid()].palyer->add(info, req.pos(), req.num(), req.dropfrom());
+        m_map_players[req.uid()].player->add(info, req.pos(), req.num(), req.dropfrom());
     }
     else
     {
-        m_map_players[req.uid()].palyer->consume(req.uid(), req.eltemtype(), req.value(), req.dropfrom(), req.inuse());
+        m_map_players[req.uid()].player->consume(req.uid(), req.eltemtype(), req.value(), req.dropfrom(), req.inuse());
+    }
+    //############################################  进行数据格式化方便进行redis的数据落地  ########################################################
+
+    Redisplayerinfo tmp;
+    tmp.set_hp(m_map_players[req.uid()].player->get_hp());
+    tmp.set_attack(m_map_players[req.uid()].player->get_attack());
+    tmp.set_id(req.uid());
+    //存储目前正在使用的道具的信息
+    for (unordered_map<int, std::shared_ptr<AbstractItem>>::iterator iter = m_map_players[req.uid()].player->m_in_use.begin(); iter != m_map_players[req.uid()].player->m_in_use.end(); iter++)
+    {
+        Attributeitempro *temp = tmp.add_Attributeitempro();
+
+        std::shared_ptr<AbstractItem> ptr = m_map_players[req.uid()].player->m_in_use[iter->first];
+        temp->set_amount(ptr->get_amount());
+        temp->set_id(ptr->get_uid());
+        temp->set_mtype(ptr->get_eltem_type());
+        temp->add_int32(ptr->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack));
+        temp->add_int32(ptr->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP));
+        temp->add_int32(ptr->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_Attack));
+        temp->add_int32(ptr->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_HP));
+        temp->add_int32(ptr->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_Attack));
+        temp->add_int32(ptr->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_HP));
+    }
+    //存储背包相关的信息
+    std::shared_ptr<Package> ptr = m_map_players[req.uid()].player->get_package();
+    std::vector<std::vector<std::shared_ptr<AbstractItem>>> vec = ptr->get_vec();
+    Packagepro *packagein = tmp.add_Packagepro();
+    for (int i = 0; i > vec.size(); i++)
+    {
+        for (int j = 0; j < vec[i].size(); j++)
+        {
+            Attributeitempro *temp = packagein->add_Attributeitempro();
+
+            temp->set_amount(vec[i][j]->get_amount());
+            temp->set_id(vec[i][j]->get_uid());
+            temp->set_mtype(vec[i][j]->get_eltem_type());
+            temp->add_int32(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack));
+            temp->add_int32(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP));
+            temp->add_int32(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_Attack));
+            temp->add_int32(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_HP));
+            temp->add_int32(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_Attack));
+            temp->add_int32(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_HP));
+        }
     }
 
+    char key[4];
+    char out[1001];
+    m_redis_server->Connect();
+    itoa(tmp.id(), key, 4);
+    tmp.SerializePartialToArray(out, tmp.ByteSize());
+    m_redis_server->SetByBit(key, out, tmp.ByteSize());
+    //############################################################  结束数据格式化  ##################################################################
     Addres res;
     res.set_ack(1);
 

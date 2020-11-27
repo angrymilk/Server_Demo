@@ -1,6 +1,6 @@
 #include "Item.h"
 //  AbstractItem    ######################################################################################################
-int AbstractItem::get_eltem_type()
+EltemType AbstractItem::get_eltem_type()
 {
     return m_eltem_type;
 }

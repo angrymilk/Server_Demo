@@ -4,7 +4,7 @@
 class ItemInterface
 {
 public:
-    virtual int get_eltem_type() = 0;
+    virtual EltemType get_eltem_type() = 0;
     virtual void set_eltem_type(EltemType type) = 0;
     virtual void set_attribute(EltemModuleType mtype, EltemAttributeType type, int value) = 0;
     virtual int get_attribute(EltemModuleType mtype, EltemAttributeType type) = 0;
@@ -26,7 +26,7 @@ public:
     {
     }
 
-    int get_eltem_type();
+    EltemType get_eltem_type();
     void set_eltem_type(EltemType type);
     void set_attribute(EltemModuleType mtype, EltemAttributeType type, int value);
     int get_attribute(EltemModuleType mtype, EltemAttributeType type);
@@ -77,7 +77,7 @@ public:
         }
     }
 
-    int get_eltem_type();
+    EltemType get_eltem_type();
     void set_eltem_type(EltemType type);
     void set_attribute(EltemModuleType mtype, EltemAttributeType type, int value);
     int get_attribute(EltemModuleType mtype, EltemAttributeType type);
