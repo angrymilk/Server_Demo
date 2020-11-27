@@ -27,7 +27,7 @@ public:
             if (m_vec[0][0] == nullptr)
             {
                 m_vec[0][0] = m_factory.create(info);
-                m_posmap[info.id] = make_pair(0, 0);
+                m_posmap[info.id] = std::make_pair(0, 0);
             }
             m_vec[0][0]->set_amount(value);
         }

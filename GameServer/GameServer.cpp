@@ -59,7 +59,7 @@ void GameServer::regist(TCPSocket &con, std::string &data, int datasize)
     {
         m_name_map[req.name()] = rand();
         m_map_players[m_name_map[req.name()]].fd = con.get_fd();
-        m_map_players[m_name_map[req.name()]].player = make_shared<Player>(new Player(m_name_map[req.name()]));
+        m_map_players[m_name_map[req.name()]].player = make_shared<Player>(m_name_map[req.name()]);
     }
 
     Response res;

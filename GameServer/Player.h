@@ -11,7 +11,7 @@
 class Player
 {
 public:
-    explicit Player(int uin)
+    Player(int uin)
     {
         m_uin = uin;
     }
