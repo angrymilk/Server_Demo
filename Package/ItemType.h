@@ -1,3 +1,5 @@
+#ifndef ITEMTYPE_H
+#define ITEMTYPE_H
 #include <unordered_map>
 #include <iostream>
 #include <cstdlib>
@@ -8,14 +10,12 @@ enum EltemType
     eMoney,
     eCONSUME,
     eEQUIP,
-    unused,
 };
 
 enum EltemAttributeType
 {
     eltem_Attribute_Attack,
     eltem_Attribute_HP,
-    unused,
 };
 
 enum EltemModuleType
@@ -23,7 +23,6 @@ enum EltemModuleType
     eltem_Module_Base,
     eltem_Module_Power,
     eltem_Module_Insert,
-    unused,
 };
 
 struct ItemInfo
@@ -34,3 +33,4 @@ struct ItemInfo
     std::vector<EltemModuleType> mmotype;
     int id;
 };
+#endif

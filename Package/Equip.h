@@ -1,3 +1,5 @@
+#ifndef EQIUP_H
+#define EQIUP_H
 #include "Item.h"
 class Equip : public Item
 {
@@ -23,7 +25,7 @@ public:
         Item::set_eltem_type(type);
     }
 
-    int get_eltem_type()
+    EltemType get_eltem_type()
     {
         return Item::get_eltem_type();
     }
@@ -48,3 +50,4 @@ public:
         return Item::get_attribute(mtype, type);
     }
 };
+#endif

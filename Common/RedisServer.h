@@ -3,7 +3,9 @@
 
 #include <vector>
 #include <string>
+#include <stdio.h>
 #include <sstream>
+#include <iostream>
 #include <hiredis/hiredis.h>
 class RedisServer
 {
@@ -11,8 +13,6 @@ public:
     RedisServer(const std::string &ip, int port) : m_ip(ip), m_port(port), m_pcmd(new char[20])
     {
     }
-
-    ~RedisServer() { delete[] m_pcmd; }
 
     int GetByBit(const std::string &_key, void **_buf, int *_len)
     {
@@ -36,6 +36,7 @@ public:
     {
         DisConnect();
         FreeReply();
+        delete[] m_pcmd;
         std::cout << "toredis dtor!" << std::endl;
     }
 

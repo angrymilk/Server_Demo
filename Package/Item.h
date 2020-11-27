@@ -48,26 +48,7 @@ private:
     EltemType m_eltem_type;
 };
 
-class Item;
-class ItemAttribute
-{
-public:
-    ItemAttribute(std::shared_ptr<Item> point, std::vector<EltemAttributeType> info, std::vector<int> values) : m_item(point)
-    {
-        for (int i = 0; i < info.size(); i++)
-        {
-            m_attribute_map[info[i]] = values[i];
-        }
-    }
-
-    void set_attribute(EltemAttributeType type, int value);
-    int get_attribute(EltemAttributeType type);
-
-private:
-    std::unordered_map<EltemAttributeType, int> m_attribute_map;
-    std::shared_ptr<Item> m_item;
-};
-
+class ItemAttribute;
 class Item : public AbstractItem, std::enable_shared_from_this<Item>
 {
 public:
@@ -93,5 +74,24 @@ public:
 
 private:
     std::unordered_map<EltemModuleType, std::shared_ptr<ItemAttribute>> m_map;
+};
+
+class ItemAttribute
+{
+public:
+    ItemAttribute(std::shared_ptr<Item> point, std::vector<EltemAttributeType> info, std::vector<int> values) : m_item(point)
+    {
+        for (int i = 0; i < info.size(); i++)
+        {
+            m_attribute_map[info[i]] = values[i];
+        }
+    }
+
+    void set_attribute(EltemAttributeType type, int value);
+    int get_attribute(EltemAttributeType type);
+
+private:
+    std::unordered_map<EltemAttributeType, int> m_attribute_map;
+    std::shared_ptr<Item> m_item;
 };
 #endif

@@ -50,7 +50,7 @@ int Item::get_amount()
     return AbstractItem::get_amount();
 }
 
-int Item::get_eltem_type()
+EltemType Item::get_eltem_type()
 {
     return AbstractItem::get_eltem_type();
 }

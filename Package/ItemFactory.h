@@ -1,3 +1,5 @@
+#ifndef ITEMFAC_H
+#define ITEMFAC_H
 #include "Item.h"
 #include "Money.h"
 #include "Equip.h"
@@ -19,3 +21,4 @@ public:
             return nullptr;
     }
 };
+#endif

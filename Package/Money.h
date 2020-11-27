@@ -1,3 +1,5 @@
+#ifndef MONEY_H
+#define MONEY_H
 #include "Item.h"
 
 class Money : public AbstractItem
@@ -24,7 +26,7 @@ public:
         AbstractItem::set_eltem_type(type);
     }
 
-    int get_eltem_type()
+    EltemType get_eltem_type()
     {
         return AbstractItem::get_eltem_type();
     }
@@ -39,3 +41,4 @@ public:
         AbstractItem::set_amount(num);
     }
 };
+#endif
