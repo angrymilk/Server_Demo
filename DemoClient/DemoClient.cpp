@@ -82,32 +82,60 @@ int DemoClient::working()
 
 void DemoClient::handle_input_and_send()
 {
-    Reqest req;
     char buffer[COMMON_BUFFER_SIZE], data[MAX_SS_PACKAGE_SIZE];
-    int ret = read(STDIN_FILENO, buffer, sizeof(buffer));
-    req.set_srcplayerid(atoi(buffer));
-
-    ret = read(STDIN_FILENO, buffer, sizeof(buffer));
-    req.set_desplayerid(atoi(buffer));
-
-    ret = read(STDIN_FILENO, buffer, sizeof(buffer));
-    req.set_message(string(buffer));
-
-    req.set_messagetype(-1);
-
     MsgHead head;
-    head.m_message_len = MESSAGE_HEAD_SIZE + req.ByteSize();
+    printf("#####################  请描述你的操作: 1:修改人物的物品  2:查询人物拥有的物品 0:注册人物的信息   #######################\n");
+    int ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+    if (ret == 1)
+    {
+        Addreq req;
+        printf("#####################  请输入你的操作: 物品id           #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        req.set_id(ret);
+        printf("#####################  请输入你的操作: 物品类型         #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        req.set_eltemtype(ret);
+        printf("#####################  请输入你的操作: 修改的物品数量    #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        req.set_value(ret);
+        printf("#####################  请输入你的操作: 修改的玩家的id    #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        req.set_uid(ret);
+        printf("#####################  请输入你的操作: 是否花费金钱交易  #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        if (ret == 1)
+            req.set_usemoney(true);
+        else
+            req.set_usemoney(false);
+        printf("#####################  请输入你的操作: 道具放在背包的位置  #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        req.set_pos(ret);
+        printf("#####################  请输入你的操作: 道具从背包扔掉/放到使用背包中  #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        if (ret == 1)
+            req.set_inuse(true);
+        else
+            req.set_inuse(false);
+        printf("#####################  请输入你的操作: 道具从背包/使用背包列表扔掉  #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        if (ret == 1)
+            req.set_dropfrom(true);
+        else
+            req.set_dropfrom(false);
+        printf("#####################  请输入你的操作: 道具的模块类型  #######################\n");
+        head.m_message_len = MESSAGE_HEAD_SIZE + req.ByteSize();
+        int coded_length = 0;
+        head.encode(data, coded_length);
+        req.SerializePartialToArray(data + coded_length, req.ByteSize());
+    }
+    else if (ret == 2)
+    {
+    }
+    else if (ret == 0)
+    {
+    }
 
     //发送相同消息三遍以检验服务器的拆包的能力
-    int coded_length = 0;
-    head.encode(data, coded_length);
-    req.SerializePartialToArray(data + coded_length, req.ByteSize());
-
-    head.encode(data + head.m_message_len, coded_length);
-    req.SerializePartialToArray(data + coded_length + head.m_message_len, head.m_message_len);
-
-    head.encode(data + head.m_message_len * 2, coded_length);
-    req.SerializePartialToArray(data + head.m_message_len * 2 + coded_length, head.m_message_len);
 
     int fd = m_client_conn_socket->get_fd();
     ret = m_client_conn_socket->send_data(data, (size_t)head.m_message_len * 3);
