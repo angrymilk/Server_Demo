@@ -8,16 +8,8 @@ message Reqest {
 }
 
 message Response{
-  required int32 Id = 1;
-  required string Message = 2;
-}
-
-message Dbrequest
-{
-  required int32 Operation = 1;
-  required int32 Uid = 2;
-  required int32 Eltemtype = 3;
-  required int32 Id = 4;
+  required int32 Uid = 1;                        //玩家的id
+  required int32 Ack = 2; 
 }
 
 message Modelinfo
@@ -41,21 +33,11 @@ message Addreq
   repeated Modelinfo Mode = 9;
 }
 
-message Addres
-{
-  required int32 Ack = 1;
-}
-
 //客户端物品查询请求
 message Packagereq
 {
   required int32 Uid = 1;                 //玩家id
   required int32 Init = 2;                //0:代表不需要进行任何数据库的数据读取  1:代表需要从redis中读取数据   2:表示需要从数据库中读取数据
-}
-
-message Packageres
-{
-  repeated int32 Num = 1;                        //物品数量
 }
 
 message Attributeitempro

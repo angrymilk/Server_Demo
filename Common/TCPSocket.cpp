@@ -321,6 +321,7 @@ int TCPSocket::process_data(std::function<int(const char *, const int, int)> cal
         size_t data_size = MAX_SS_PACKAGE_SIZE;
         char m_sRvMsgBuf[MAX_SS_PACKAGE_SIZE];
         ret = m_buffer->get_one_code(m_sRvMsgBuf, data_size);
+        std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
         if (ret > 0)
         {
             callback(m_sRvMsgBuf, data_size, m_fd);

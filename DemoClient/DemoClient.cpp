@@ -84,10 +84,12 @@ void DemoClient::handle_input_and_send()
 {
     char buffer[COMMON_BUFFER_SIZE], data[MAX_SS_PACKAGE_SIZE];
     MsgHead head;
+    int len = 0;
     printf("#####################  请描述你的操作: 1:修改人物的物品  2:查询人物拥有的物品 0:注册人物的信息   #######################\n");
     int ret = read(STDIN_FILENO, buffer, sizeof(buffer));
     if (atoi(buffer) == 1)
     {
+        /*
         Addreq req;
         printf("#####################  请输入你的操作: 物品id           #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
@@ -134,7 +136,7 @@ void DemoClient::handle_input_and_send()
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
         temp->add_attributetypevalue(atoi(buffer));
         printf("#####################  请输入你的操作: 道具eltem_Module_Power模块属性      #######################\n");
-        Modelinfo *temp = req.add_mode();
+        temp = req.add_mode();
         temp->set_modeltype(1);
         printf("#####################  请输入你的操作: 道具对应模块属性的eltem_Attribute_Attack值      #######################\n");
         temp->add_attributetype(0);
@@ -145,7 +147,7 @@ void DemoClient::handle_input_and_send()
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
         temp->add_attributetypevalue(atoi(buffer));
         printf("#####################  请输入你的操作: 道具eltem_Module_Insert模块属性      #######################\n");
-        Modelinfo *temp = req.add_mode();
+        temp = req.add_mode();
         temp->set_modeltype(2);
         printf("#####################  请输入你的操作: 道具对应模块属性的eltem_Attribute_Attack值      #######################\n");
         temp->add_attributetype(0);
@@ -158,10 +160,41 @@ void DemoClient::handle_input_and_send()
         //------------------------------------------------------------------------------------------------------------------------------------
 
         head.m_message_len = (MESSAGE_HEAD_SIZE + req.ByteSize()) | (1 << 20);
-        int tmplen = head.m_message_len;
+        len = MESSAGE_HEAD_SIZE + req.ByteSize();
         int coded_length = 0;
         head.encode(data, coded_length);
-        req.SerializePartialToArray(data + tmplen, req.ByteSize());
+        req.SerializePartialToArray(data + MESSAGE_HEAD_SIZE, req.ByteSize());
+        */
+        Addreq req;
+        req.set_id(10);
+        req.set_eltemtype(0);
+        req.set_value(100);
+        req.set_uid(6989);
+        req.set_usemoney(false);
+        req.set_dropfrom(false);
+        Modelinfo *temp = req.add_mode();
+        temp->set_modeltype(0);
+        temp->add_attributetype(0);
+        temp->add_attributetypevalue(0);
+        temp->add_attributetype(0);
+        temp->add_attributetypevalue(0);
+        temp = req.add_mode();
+        temp->set_modeltype(1);
+        temp->add_attributetype(0);
+        temp->add_attributetypevalue(0);
+        temp->add_attributetype(0);
+        temp->add_attributetypevalue(0);
+        temp = req.add_mode();
+        temp->set_modeltype(2);
+        temp->add_attributetype(0);
+        temp->add_attributetypevalue(0);
+        temp->add_attributetype(0);
+        temp->add_attributetypevalue(0);
+        head.m_message_len = (MESSAGE_HEAD_SIZE + req.ByteSize()) | (1 << 20);
+        len = MESSAGE_HEAD_SIZE + req.ByteSize();
+        int coded_length = 0;
+        head.encode(data, coded_length);
+        req.SerializePartialToArray(data + MESSAGE_HEAD_SIZE, req.ByteSize());
     }
     else if (atoi(buffer) == 2)
     {
@@ -174,13 +207,14 @@ void DemoClient::handle_input_and_send()
         req.set_init(atoi(buffer));
 
         head.m_message_len = (MESSAGE_HEAD_SIZE + req.ByteSize()) | ((1 << 20) | (1 << 21));
-        int tmplen = head.m_message_len;
+        len = MESSAGE_HEAD_SIZE + req.ByteSize();
         int coded_length = 0;
         head.encode(data, coded_length);
-        req.SerializePartialToArray(data + tmplen, req.ByteSize());
+        req.SerializePartialToArray(data + MESSAGE_HEAD_SIZE, req.ByteSize());
     }
     else if (atoi(buffer) == 0)
     {
+        /*
         Reqest req;
         printf("#####################  请输入你的操作: 注册玩家的名字      #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
@@ -191,12 +225,26 @@ void DemoClient::handle_input_and_send()
         printf("#####################  请输入你的操作: 注册玩家时需要发送的message      #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
         req.set_message(string(buffer));
+
+        head.m_message_len = MESSAGE_HEAD_SIZE + req.ByteSize();
+        len = head.m_message_len;
+        int coded_length = 0;
+        head.encode(data, coded_length);
+        req.SerializePartialToArray(data + MESSAGE_HEAD_SIZE, req.ByteSize());
+        */
+        Reqest req;
+        req.set_name(string("chenzun"));
+        req.set_password(string("123456"));
+        req.set_message(string("register"));
+        head.m_message_len = MESSAGE_HEAD_SIZE + req.ByteSize();
+        len = head.m_message_len;
+        int coded_length = 0;
+        head.encode(data, coded_length);
+        req.SerializePartialToArray(data + MESSAGE_HEAD_SIZE, req.ByteSize());
     }
 
-    //发送相同消息三遍以检验服务器的拆包的能力
-
     int fd = m_client_conn_socket->get_fd();
-    ret = m_client_conn_socket->send_data(data, (size_t)head.m_message_len * 3);
+    ret = m_client_conn_socket->send_data(data, (size_t)len);
     if (ret < success)
     {
         printf("Send Failed...........\n");
@@ -231,6 +279,6 @@ int DemoClient::process_code(const char *pszInCode, const int iInCodeSize, int s
     int iBodySize = stHead.m_message_len - MESSAGE_HEAD_SIZE;
     Response res;
     res.ParseFromArray(pszInCode + MESSAGE_HEAD_SIZE, iBodySize);
-    //cout << "Client Get Message From Server Player:[" << res.srcplayerid() << "]  Message:[" << res.message() << "]\n";
+    cout << "Client Get Message From Server Player:[" << res.uid() << "]  Ack:[" << res.ack() << "]\n";
     return 0;
 }

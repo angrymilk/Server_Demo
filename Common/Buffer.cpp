@@ -75,6 +75,7 @@ int Buffer::get_one_code(char *data, size_t &size)
 
     //长度字段占用4byte
     int code_size = (int)ntohl((u_long)(*(int *)&m_recv_buffer[m_recv_head]));
+    std::cout << "============================================================ " << code_size << "\n";
 
     if (code_size < 0)
         return -2;
