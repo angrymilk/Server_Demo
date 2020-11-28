@@ -86,21 +86,21 @@ void DemoClient::handle_input_and_send()
     MsgHead head;
     printf("#####################  请描述你的操作: 1:修改人物的物品  2:查询人物拥有的物品 0:注册人物的信息   #######################\n");
     int ret = read(STDIN_FILENO, buffer, sizeof(buffer));
-    if (ret == 1)
+    if (atoi(buffer) == 1)
     {
         Addreq req;
         printf("#####################  请输入你的操作: 物品id           #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
-        req.set_id(ret);
+        req.set_id(atoi(buffer));
         printf("#####################  请输入你的操作: 物品类型         #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
-        req.set_eltemtype(ret);
+        req.set_eltemtype(atoi(buffer));
         printf("#####################  请输入你的操作: 修改的物品数量    #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
-        req.set_value(ret);
+        req.set_value(atoi(buffer));
         printf("#####################  请输入你的操作: 修改的玩家的id    #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
-        req.set_uid(ret);
+        req.set_uid(atoi(buffer));
         printf("#####################  请输入你的操作: 是否花费金钱交易  #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
         if (ret == 1)
@@ -109,7 +109,7 @@ void DemoClient::handle_input_and_send()
             req.set_usemoney(false);
         printf("#####################  请输入你的操作: 道具放在背包的位置  #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
-        req.set_pos(ret);
+        req.set_pos(atoi(buffer));
         printf("#####################  请输入你的操作: 道具从背包扔掉/放到使用背包中  #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
         if (ret == 1)
@@ -122,17 +122,75 @@ void DemoClient::handle_input_and_send()
             req.set_dropfrom(true);
         else
             req.set_dropfrom(false);
-        printf("#####################  请输入你的操作: 道具的模块类型  #######################\n");
-        head.m_message_len = MESSAGE_HEAD_SIZE + req.ByteSize();
+        printf("#####################  请输入你的操作: 道具eltem_Module_Base模块属性      #######################\n");
+        Modelinfo *temp = req.add_mode();
+        temp->set_modeltype(0);
+        printf("#####################  请输入你的操作: 道具对应模块属性的eltem_Attribute_Attack值      #######################\n");
+        temp->add_attributetype(0);
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        temp->add_attributetypevalue(atoi(buffer));
+        printf("#####################  请输入你的操作: 道具对应模块属性的eltem_Attribute_HP值      #######################\n");
+        temp->add_attributetype(1);
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        temp->add_attributetypevalue(atoi(buffer));
+        printf("#####################  请输入你的操作: 道具eltem_Module_Power模块属性      #######################\n");
+        Modelinfo *temp = req.add_mode();
+        temp->set_modeltype(1);
+        printf("#####################  请输入你的操作: 道具对应模块属性的eltem_Attribute_Attack值      #######################\n");
+        temp->add_attributetype(0);
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        temp->add_attributetypevalue(atoi(buffer));
+        printf("#####################  请输入你的操作: 道具对应模块属性的eltem_Attribute_HP值      #######################\n");
+        temp->add_attributetype(1);
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        temp->add_attributetypevalue(atoi(buffer));
+        printf("#####################  请输入你的操作: 道具eltem_Module_Insert模块属性      #######################\n");
+        Modelinfo *temp = req.add_mode();
+        temp->set_modeltype(2);
+        printf("#####################  请输入你的操作: 道具对应模块属性的eltem_Attribute_Attack值      #######################\n");
+        temp->add_attributetype(0);
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        temp->add_attributetypevalue(atoi(buffer));
+        printf("#####################  请输入你的操作: 道具对应模块属性的eltem_Attribute_HP值      #######################\n");
+        temp->add_attributetype(1);
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        temp->add_attributetypevalue(atoi(buffer));
+        //------------------------------------------------------------------------------------------------------------------------------------
+
+        head.m_message_len = (MESSAGE_HEAD_SIZE + req.ByteSize()) | (1 << 20);
+        int tmplen = head.m_message_len;
         int coded_length = 0;
         head.encode(data, coded_length);
-        req.SerializePartialToArray(data + coded_length, req.ByteSize());
+        req.SerializePartialToArray(data + tmplen, req.ByteSize());
     }
-    else if (ret == 2)
+    else if (atoi(buffer) == 2)
     {
+        Packagereq req;
+        printf("#####################  请输入你的操作: 查询的玩家的Id      #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        req.set_uid(atoi(buffer));
+        printf("#####################  请输入你的操作: 从哪里读取数据 0:直接从服务器内存中读取  1:从redis中读取数据  2:从sql的数据库中读取数据      #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        req.set_init(atoi(buffer));
+
+        head.m_message_len = (MESSAGE_HEAD_SIZE + req.ByteSize()) | ((1 << 20) | (1 << 21));
+        int tmplen = head.m_message_len;
+        int coded_length = 0;
+        head.encode(data, coded_length);
+        req.SerializePartialToArray(data + tmplen, req.ByteSize());
     }
-    else if (ret == 0)
+    else if (atoi(buffer) == 0)
     {
+        Reqest req;
+        printf("#####################  请输入你的操作: 注册玩家的名字      #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        req.set_name(string(buffer));
+        printf("#####################  请输入你的操作: 注册玩家的密码      #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        req.set_password(string(buffer));
+        printf("#####################  请输入你的操作: 注册玩家时需要发送的message      #######################\n");
+        ret = read(STDIN_FILENO, buffer, sizeof(buffer));
+        req.set_message(string(buffer));
     }
 
     //发送相同消息三遍以检验服务器的拆包的能力
@@ -173,6 +231,6 @@ int DemoClient::process_code(const char *pszInCode, const int iInCodeSize, int s
     int iBodySize = stHead.m_message_len - MESSAGE_HEAD_SIZE;
     Response res;
     res.ParseFromArray(pszInCode + MESSAGE_HEAD_SIZE, iBodySize);
-    cout << "Client Get Message From Server Player:[" << res.srcplayerid() << "]  Message:[" << res.message() << "]\n";
+    //cout << "Client Get Message From Server Player:[" << res.srcplayerid() << "]  Message:[" << res.message() << "]\n";
     return 0;
 }
