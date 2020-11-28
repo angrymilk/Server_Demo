@@ -8,7 +8,7 @@ GameServer::GameServer(std::string ip, int port)
     m_server->set_read_callback(std::bind(&GameServer::on_message, this, std::placeholders::_1));
     m_thread_task.Start();
     m_map_players[0].fd = -1; //场景代表
-    m_map_players[0].player->set_uin(0);
+    m_map_players[0].player = make_shared<Player>(0);
 }
 
 int GameServer::run()
@@ -22,6 +22,7 @@ int GameServer::on_message(TCPSocket &con)
 {
     //将函数扔入计算线程中
     m_thread_task.submit(std::bind(&GameServer::get_one_code, this, con));
+    return 0;
 }
 
 void GameServer::get_one_code(TCPSocket &con)
@@ -32,15 +33,25 @@ void GameServer::get_one_code(TCPSocket &con)
         size_t data_size = MAX_SS_PACKAGE_SIZE;
         std::string m_sRvMsgBuf;
         m_sRvMsgBuf.reserve(MAX_SS_PACKAGE_SIZE);
+        printf("[GameServer][GameServer.cpp:%d][INFO]:\n", __LINE__);
         ret = con.m_buffer->get_one_code(const_cast<char *>(m_sRvMsgBuf.c_str()), data_size);
         if (ret > 0)
         {
-            if (((data_size & ((1 << 20) & (1 << 21))) >> 20) == 1)
+            if (((data_size & ((1 << 20) | (1 << 21))) >> 20) == 1)
+            {
+                printf("[GameServer][GameServer.cpp:%d][INFO]: In Data Change Function\n", __LINE__);
                 solve_add(con, m_sRvMsgBuf, data_size);
-            else if (((data_size & ((1 << 20) & (1 << 21))) >> 20) == 2)
+            }
+            else if (((data_size & ((1 << 20) | (1 << 21))) >> 20) == 2)
+            {
+                printf("[GameServer][GameServer.cpp:%d][INFO]: In Data Query Function\n", __LINE__);
                 solve_query(con, m_sRvMsgBuf, data_size);
-            else if (((data_size & ((1 << 20) & (1 << 21))) >> 20) == 0)
+            }
+            else if (((data_size & ((1 << 20) | (1 << 21))) >> 20) == 0)
+            {
+                printf("[GameServer][GameServer.cpp:%d][INFO]: In Data Register Function\n", __LINE__);
                 regist(con, m_sRvMsgBuf, data_size);
+            }
             continue;
         }
         else if (ret < 0)
@@ -57,14 +68,14 @@ void GameServer::regist(TCPSocket &con, std::string &data, int datasize)
     req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, datasize);
     if (m_name_map.find(req.name()) == m_name_map.end())
     {
-        m_name_map[req.name()] = rand();
+        m_name_map[req.name()] = rand() % 10009;
         m_map_players[m_name_map[req.name()]].fd = con.get_fd();
         m_map_players[m_name_map[req.name()]].player = make_shared<Player>(m_name_map[req.name()]);
     }
 
     Response res;
-    res.set_id(m_name_map[req.name()]);
-    res.set_message(req.message());
+    res.set_uid(m_name_map[req.name()]);
+    res.set_ack(1);
 
     char data_[COMMON_BUFFER_SIZE];
     MsgHead head;
@@ -72,7 +83,7 @@ void GameServer::regist(TCPSocket &con, std::string &data, int datasize)
     int temp = head.m_message_len;
     int codeLength = 0;
     head.encode(data_, codeLength);
-    res.SerializePartialToArray(data_ + temp, res.ByteSize());
+    res.SerializePartialToArray(data_ + MESSAGE_HEAD_SIZE, res.ByteSize());
     con.send(std::bind(&GameServer::send, this, data_, temp));
 }
 
@@ -97,15 +108,15 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
         info.mattrtype.resize(req.mode_size());
         for (int i = 0; i < req.mode_size(); i++)
         {
-            Modelinfo *tmp = req.add_mode();
+            Modelinfo tmp = req.mode(i);
 
-            info.mmotype[i] = (EltemModuleType)tmp->modeltype();
-            info.mattrtype[i].resize(tmp->attributetype_size());
-            info.value[i].resize(tmp->attributetype_size());
-            for (int j = 0; j < tmp->attributetype_size(); j++)
+            info.mmotype[i] = (EltemModuleType)tmp.modeltype();
+            info.mattrtype[i].resize(tmp.attributetype_size());
+            info.value[i].resize(tmp.attributetype_size());
+            for (int j = 0; j < tmp.attributetype_size(); j++)
             {
-                info.value[i][j] = tmp->attributetypevalue(j);
-                info.mattrtype[i][j] = (EltemAttributeType)tmp->attributetype(j);
+                info.value[i][j] = tmp.attributetypevalue(j);
+                info.mattrtype[i][j] = (EltemAttributeType)tmp.attributetype(j);
             }
         }
         info.mtype = (EltemType)req.eltemtype();
@@ -167,17 +178,17 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
     tmp.SerializePartialToArray(out, tmp.ByteSize());
     m_redis_server->SetByBit(key, out, tmp.ByteSize());
     //############################################################  结束数据格式化  ##################################################################
-    Addres res;
+    Response res;
+    res.set_uid(req.uid());
     res.set_ack(1);
 
     char data_[COMMON_BUFFER_SIZE];
     MsgHead head;
     head.m_message_len = res.ByteSize() + MESSAGE_HEAD_SIZE;
     int temp = head.m_message_len;
-    head.m_message_len = (head.m_message_len | (1 << 20));
     int codeLength = 0;
     head.encode(data_, codeLength);
-    res.SerializePartialToArray(data_ + temp, res.ByteSize());
+    res.SerializePartialToArray(data_ + MESSAGE_HEAD_SIZE, res.ByteSize());
     con.send(std::bind(&GameServer::send, this, data_, temp));
 }
 
@@ -215,8 +226,9 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
         }
     }
 
-    Addres res;
+    Response res;
     res.set_ack(1);
+    res.set_uid(req.uid());
 
     char data_[COMMON_BUFFER_SIZE];
     MsgHead head;
@@ -225,7 +237,7 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
     head.m_message_len = (head.m_message_len | (1 << 21));
     int codeLength = 0;
     head.encode(data_, codeLength);
-    res.SerializePartialToArray(data_ + temp, res.ByteSize());
+    res.SerializePartialToArray(data_ + MESSAGE_HEAD_SIZE, res.ByteSize());
     con.send(std::bind(&GameServer::send, this, data_, temp));
 }
 

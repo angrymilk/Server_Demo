@@ -130,7 +130,7 @@ int TCPSocket::send_data(char *data, size_t size)
 int TCPSocket::open_as_server(uint16_t port, char *ip)
 {
     printf("[Common][TCPSocket.cpp:%d][INFO]:Init Port:%d  IP:%s\n", __LINE__, port, ip);
-    if (m_fd > 0)
+    if (m_fd < 0)
     {
         close_socket();
     }
@@ -141,7 +141,6 @@ int TCPSocket::open_as_server(uint16_t port, char *ip)
         m_fd = -1;
         return -1;
     }
-
     int flags = 1;
     struct linger ling = {0, 0};
     setsockopt(m_fd, SOL_SOCKET, SO_KEEPALIVE, &flags, sizeof(flags));
@@ -320,6 +319,8 @@ int TCPSocket::process_data()
     }
 
     printf("[Common][TCPSocket.cpp:%d][INFO]:Get_One_Code And Process_CallBack\n", __LINE__);
+    if (!m_read_callback)
+        return -1;
     ret = m_read_callback(*this);
     if (ret)
     {

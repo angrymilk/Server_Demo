@@ -43,10 +43,10 @@ void BaseServer::run_in_loop(Functor func)
 void BaseServer::wake_up_write()
 {
     uint64_t one = 1;
-    ssize_t ret = ::write(m_wake_fd, &one,  sizeof(one));
+    ssize_t ret = ::write(m_wake_fd, &one, sizeof(one));
     if (ret < 0)
     {
-        printf("[Common][BaseServer.cpp:%d][ERROR]:Write wake_up_fd error errno:[%d]!!!\n", __LINE__, ret, errno);
+        printf("[Common][BaseServer.cpp:%d][ERROR]:Write wake_up_fd error:[%d] errno:[%d]!!!\n", __LINE__, ret, errno);
         return;
     }
     printf("[Common][BaseServer.cpp:%d][INFO]:Write wake_up_fd num:[%d]\n", __LINE__, ret);

@@ -85,14 +85,14 @@ int Buffer::get_one_code(char *data, size_t &size)
         return 0;
     }
 
-    if (code_size >= COMMON_BUFFER_SIZE)
+    if ((code_size & ((1 << 20) - 1)) >= COMMON_BUFFER_SIZE)
     {
         size = (size_t)code_size;
         return -3;
     }
 
     //若接收缓冲区内的数据不足一个code
-    if (buffer_data_size < code_size)
+    if (buffer_data_size < (code_size & ((1 << 20) - 1)))
     {
         //并且数据已经存放到缓冲区尾了, 则移动数据到接收缓冲区头部
         //if (m_recv_tail == (int)sizeof(m_recv_buffer))
@@ -105,12 +105,13 @@ int Buffer::get_one_code(char *data, size_t &size)
         return 0;
     }
 
-    if ((int)size < code_size)
+    if ((int)size < (code_size & ((1 << 20) - 1)))
     {
         return -4;
     }
 
-    size = (size_t)(code_size & ((1 << 21) - 1));
+    size = (size_t)(code_size & ((1 << 20) - 1));
+    printf("+++++++++++++ -----------    %d\n", size);
     memcpy(data, &m_recv_buffer[m_recv_head], size);
     m_recv_head += size;
     size = (size_t)code_size;

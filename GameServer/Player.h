@@ -14,6 +14,7 @@ public:
     Player(int uin)
     {
         m_uin = uin;
+        m_package.reset(new Package);
     }
 
     ~Player();
