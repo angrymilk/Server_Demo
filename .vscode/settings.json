@@ -53,6 +53,9 @@
         "typeinfo": "cpp",
         "numeric": "cpp",
         "cinttypes": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "list": "cpp",
+        "slist": "cpp",
+        "iomanip": "cpp"
     }
 }

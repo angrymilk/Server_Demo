@@ -1,11 +1,13 @@
 #ifndef DEMO_SERVER_H
 #define DEMO_SERVER_H
+#define MYSQLPP_SSQLS_NO_STATICS
 #include "../Common/BaseServer.h"
 #include "../Common/MesHead.h"
 #include "Player.h"
 #include "../Common/TCPSocket.h"
 #include "../Common/ThreadTask.h"
 #include "../Common/RedisServer.h"
+#include "../Common/SQLServer.h"
 struct PlayerInfo
 {
     int fd;
@@ -38,6 +40,7 @@ private:
     std::shared_ptr<BaseServer> m_server;
     std::unordered_map<int, PlayerInfo> m_map_players;
     std::shared_ptr<RedisServer> m_redis_server;
+    std::shared_ptr<SQLServer> m_sql_server;
     std::unordered_map<string, int> m_name_map;
 };
 #endif

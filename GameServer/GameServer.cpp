@@ -4,8 +4,10 @@
 GameServer::GameServer(std::string ip, int port)
 {
     m_redis_server.reset(new RedisServer);
+    m_sql_server.reset(new SQLServer);
     m_redis_server->Init();
     m_redis_server->Connect();
+
     m_server.reset(new BaseServer(ip, port));
     m_server->set_read_callback(std::bind(&GameServer::on_message, this, std::placeholders::_1));
     m_thread_task.Start();
@@ -67,12 +69,22 @@ void GameServer::regist(TCPSocket &con, std::string &data, int datasize)
 {
     Reqest req;
     req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, datasize);
+    m_sql_server->query(("select user_name,user_password from PlayerInfo where user_name='" + req.name() + "';").c_str());
+    std::map<std::string, std::map<std::string, std::string>> password = m_sql_server->parser();
+    std::cout << password[req.name()]["user_password"] << "    " << req.password() << "\n";
+    if (password[req.name()]["user_password"] == req.password())
+        printf("[GameServer][GameServer.cpp:%d][INFO]:密码匹配成功\n", __LINE__);
+    else
+        printf("[GameServer][GameServer.cpp:%d][ERROR]:密码匹配失败  ！！！！！！！！！！！！\n", __LINE__);
     if (m_name_map.find(req.name()) == m_name_map.end())
     {
         m_name_map[req.name()] = rand() % 10009;
         m_map_players[m_name_map[req.name()]].fd = con.get_fd();
         m_map_players[m_name_map[req.name()]].player = make_shared<Player>(m_name_map[req.name()]);
     }
+    m_sql_server->query(("UPDATE PlayerInfo SET user_id=" + std::to_string(m_name_map[req.name()]) + " WHERE user_name='" + req.name() + "';").c_str());
+    //m_sql_server->query(("UPDATE PlayerInfo SET hp=" + std::to_string(100) + " WHERE user_name='" + req.name() + "';").c_str());
+    //m_sql_server->query(("UPDATE PlayerInfo SET attack=" + std::to_string(100) + " WHERE user_name='" + req.name() + "';").c_str());
 
     Response res;
     res.set_uid(m_name_map[req.name()]);
@@ -125,13 +137,13 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
                 info.value[tmp.modeltype()][tmp.attributetype(j)] = tmp.attributetypevalue(j);
         }
         info.mtype = (EltemType)req.eltemtype();
-        int ret = m_map_players[req.uid()].player->add(info, req.pos(), req.value(), req.dropfrom());
+        int ret = m_map_players[req.uid()].player->add(info, req.pos(), req.value(), req.dropfrom(), m_sql_server);
         if (ret)
             return;
     }
     else
     {
-        m_map_players[req.uid()].player->consume(req.id(), (EltemType)req.eltemtype(), req.value(), req.dropfrom(), req.inuse());
+        m_map_players[req.uid()].player->consume(req.id(), (EltemType)req.eltemtype(), req.value(), req.dropfrom(), req.inuse(), m_sql_server);
     }
     //############################################  进行数据格式化方便进行redis的数据落地  ########################################################
 
@@ -169,6 +181,7 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
         Packagepro *packagein = tmp.mutable_package();
         for (std::unordered_map<int, std::pair<int, int>>::iterator iter = _map.begin(); iter != _map.end(); iter++)
         {
+            printf("存储背包相关的信息\n");
             Attributeitempro *temp = packagein->add_itempro();
             int i = iter->second.first, j = iter->second.second;
             temp->set_amount(ptr->get_vec(i, j)->get_amount());
@@ -210,7 +223,7 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
     //Packageres res;
     req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
 
-    //如果客户端的信息提示客户端需要redis中的所有数据,那么需要将所有的数据提交给客户端
+    //查询redis端的数据
     if (req.init() == 1)
     {
         int id = req.uid();
@@ -241,6 +254,12 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
         printf("#####################################################################################\n");
         printf("#####################################################################################\n");
     }
+    m_sql_server->query((std::string("INSERT INTO UseInfo (player_id,item_id,item_num) VALUES (6989,12,1);").c_str()));
+    m_sql_server->query((std::string("INSERT INTO PackageInfo (player_id,item_id,item_num) VALUES (6989,14,90);").c_str()));
+    m_sql_server->query((std::string("INSERT INTO PackageInfo (player_id,item_id,item_num) VALUES (6989,13,50);").c_str()));
+    m_sql_server->query((std::string("INSERT INTO ItemInfo (item_id,item_type,eltem_Module_Base_Hp,eltem_Module_Base_Attack,eltem_Module_Power_Hp,eltem_Module_Power_Attack,eltem_Module_Insert_Hp,eltem_Module_Insert_Attack) VALUE (14,'consume',10,30,10,10,10,10);").c_str()));
+    m_sql_server->query((std::string("INSERT INTO ItemInfo (item_id,item_type,eltem_Module_Base_Hp,eltem_Module_Base_Attack,eltem_Module_Power_Hp,eltem_Module_Power_Attack,eltem_Module_Insert_Hp,eltem_Module_Insert_Attack) VALUE (13,'money',0,0,0,0,0,0);").c_str()));
+    m_sql_server->query((std::string("INSERT INTO ItemInfo (item_id,item_type,eltem_Module_Base_Hp,eltem_Module_Base_Attack,eltem_Module_Power_Hp,eltem_Module_Power_Attack,eltem_Module_Insert_Hp,eltem_Module_Insert_Attack) VALUE (12,'equip',10,30,10,10,10,10);").c_str()));
 
     Response res;
     res.set_ack(1);

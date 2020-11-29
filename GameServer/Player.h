@@ -7,6 +7,7 @@
 #include <map>
 #include <cstdio>
 #include "../Package/Package.h"
+#include "../Common/SQLServer.h"
 
 class Player
 {
@@ -25,9 +26,9 @@ public:
 
     int uin();
 
-    int add(ItemInfo info, int pos, int value, bool to_package);
+    int add(ItemInfo info, int pos, int value, bool to_package, std::shared_ptr<SQLServer> sql_server);
 
-    int consume(int id, EltemType type, int value, bool to_package, bool inuse);
+    int consume(int id, EltemType type, int value, bool to_package, bool inuse, std::shared_ptr<SQLServer> sql_server);
 
     int get_num(int id);
 
