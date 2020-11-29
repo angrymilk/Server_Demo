@@ -76,20 +76,23 @@ public:
     {
         if (m_posmap.find(id) != m_posmap.end())
         {
+            printf("在进行comsume的过程中\n");
             int tmp = m_vec[m_posmap[id].first][m_posmap[id].second]->get_amount();
-            if (tmp < value)
+            if (tmp + value < 0)
                 return nullptr;
-            m_vec[m_posmap[id].first][m_posmap[id].second]->set_amount(tmp - value);
-            auto p = m_vec[m_posmap[id].first][m_posmap[id].second];
-            return p;
-            if (m_vec[m_posmap[id].first][m_posmap[id].second]->get_amount() == 0)
+            //m_vec[m_posmap[id].first][m_posmap[id].second]->set_amount(tmp + value);
+            if ((m_vec[m_posmap[id].first][m_posmap[id].second]->get_amount() + value) == 0)
             {
+                printf("在进行comsume的过程中\n");
                 auto p = m_vec[m_posmap[id].first][m_posmap[id].second];
                 m_vec[m_posmap[id].first][m_posmap[id].second].reset();
                 m_num[m_posmap[id].first]--;
                 m_posmap.erase(id);
                 return p;
             }
+            m_vec[m_posmap[id].first][m_posmap[id].second]->set_amount(tmp + value);
+            auto p = m_vec[m_posmap[id].first][m_posmap[id].second];
+            return p;
         }
         else
             return nullptr;

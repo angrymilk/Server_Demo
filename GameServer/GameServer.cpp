@@ -94,7 +94,6 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
     int bodySize = (datasize & ((1 << 20) - 1)) - MESSAGE_HEAD_SIZE;
     Addreq req;
     req.ParseFromArray(const_cast<char *>(data.c_str()) + MESSAGE_HEAD_SIZE, bodySize);
-    //printf("[GameServer][GameServer.cpp:%d][INFO]:UserId = [%d]   message_len = [%d]", __LINE__);
     if (req.value() > 0)
     {
         if (m_map_players.find(req.uid()) == m_map_players.end())
@@ -104,21 +103,26 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
         }
         ItemInfo info;
         info.id = req.id();
-        info.mmotype.resize(req.mode_size());
-        info.value.resize(req.mode_size());
-        info.mattrtype.resize(req.mode_size());
+        info.mmotype.resize(3);
+        info.value.resize(3);
+        info.mattrtype.resize(3);
+
+        for (int i = 0; i < 3; i++)
+        {
+            info.mmotype[i] = (EltemModuleType)i;
+            info.mattrtype[i].resize(3);
+            info.value[i].resize(3);
+            for (int j = 0; j < 3; j++)
+            {
+                info.value[i][j] = 0;
+                info.mattrtype[i][j] = (EltemAttributeType)j;
+            }
+        }
         for (int i = 0; i < req.mode_size(); i++)
         {
             Modelinfo tmp = req.mode(i);
-
-            info.mmotype[i] = (EltemModuleType)tmp.modeltype();
-            info.mattrtype[i].resize(tmp.attributetype_size());
-            info.value[i].resize(tmp.attributetype_size());
             for (int j = 0; j < tmp.attributetype_size(); j++)
-            {
-                info.value[i][j] = tmp.attributetypevalue(j);
-                info.mattrtype[i][j] = (EltemAttributeType)tmp.attributetype(j);
-            }
+                info.value[tmp.modeltype()][tmp.attributetype(j)] = tmp.attributetypevalue(j);
         }
         info.mtype = (EltemType)req.eltemtype();
         int ret = m_map_players[req.uid()].player->add(info, req.pos(), req.value(), req.dropfrom());
@@ -127,7 +131,7 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
     }
     else
     {
-        m_map_players[req.uid()].player->consume(req.uid(), (EltemType)req.eltemtype(), req.value(), req.dropfrom(), req.inuse());
+        m_map_players[req.uid()].player->consume(req.id(), (EltemType)req.eltemtype(), req.value(), req.dropfrom(), req.inuse());
     }
     //############################################  进行数据格式化方便进行redis的数据落地  ########################################################
 
@@ -144,9 +148,8 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
     }
     for (unordered_map<int, std::shared_ptr<AbstractItem>>::iterator iter = m_map_players[req.uid()].player->m_in_use.begin(); iter != m_map_players[req.uid()].player->m_in_use.end(); iter++)
     {
+        printf("在使用中的道具\n");
         Attributeitempro *temp = tmp.add_inuse();
-        //printf("fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuk\n");
-
         std::shared_ptr<AbstractItem> ptr = m_map_players[req.uid()].player->m_in_use[iter->first];
         temp->set_amount(ptr->get_amount());
         temp->set_id(ptr->get_uid());
@@ -166,7 +169,6 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
         Packagepro *packagein = tmp.mutable_package();
         for (std::unordered_map<int, std::pair<int, int>>::iterator iter = _map.begin(); iter != _map.end(); iter++)
         {
-            printf("fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuk\n");
             Attributeitempro *temp = packagein->add_itempro();
             int i = iter->second.first, j = iter->second.second;
             temp->set_amount(ptr->get_vec(i, j)->get_amount());
@@ -185,7 +187,6 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
     char out[1001];
     snprintf(key, 5, "%d", tmp.id());
     tmp.SerializePartialToArray(out, tmp.ByteSize());
-    printf(">>>>>>>>>>>>>>>>>>..   %d  %d\n", strlen(out), tmp.ByteSize());
     m_redis_server->Set(key, tmp.ByteSize(), out);
     //############################################################  结束数据格式化  ##################################################################
     Response res;
@@ -220,23 +221,25 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
         m_redis_server->Get(idque, result, &len);
         Redisplayerinfo tmp;
         tmp.ParseFromArray(result, len);
-        printf("||||||||||||||||    -------------       query          %d\n", len);
-        printf("从redis中读取客户端断线前的数据信息\n");
-        printf("################# Player Id = %d      Player Hp = %d    Player Attakc = %d   %d ###############\n", tmp.id(), tmp.hp(), tmp.attack(), tmp.inuse_size());
+        printf("#################   从redis中读取客户端玩家的数据信息   ##################################\n");
+        printf("#####################################################################################\n");
+        printf("#####################################################################################\n");
+        printf("################# Player_Id=%d      Player_Hp=%d    Player_Attakc=%d  ###############\n", tmp.id(), tmp.hp(), tmp.attack());
         for (int i = 0; i < tmp.inuse_size(); i++)
         {
             Attributeitempro temp = tmp.inuse(i);
             if (temp.id() == -1)
                 break;
-            printf("################# 正在处于使用中的道具 道具id: %d      道具数量: %d\n", temp.id(), temp.amount());
+            printf("################# 正在处于使用中的道具   id=%d      道具数量=%d\n", temp.id(), temp.amount());
         }
-        printf("################# 背包中的物品类型id 0:代表金钱  1:代表道具  2:代表消耗品\n");
         Packagepro packageinfo = tmp.package();
         for (int i = 0; i < packageinfo.itempro_size(); i++)
         {
             Attributeitempro temp = packageinfo.itempro(i);
-            printf("################# 放在背包中的物品id: %d      物品数量: %d   物品类型: %d\n", temp.id(), temp.amount(), temp.eltemtype());
+            printf("################# 放在背包中的物品       id=%d      物品数量=%d   物品类型=%d (说明: 0:代表金钱  1:代表道具  2:代表消耗品)\n", temp.id(), temp.amount(), temp.eltemtype());
         }
+        printf("#####################################################################################\n");
+        printf("#####################################################################################\n");
     }
 
     Response res;

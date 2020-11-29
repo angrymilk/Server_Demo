@@ -49,8 +49,10 @@ int Player::consume(int id, EltemType type, int value, bool to_package, bool inu
 
     if (inuse) //从背包中移动道具到使用中的物品栏中
     {
-        if (value != 1 || m_in_use.find(id) != m_in_use.end())
+        printf("从背包中移动道具到使用中的物品栏中\n");
+        if (value != -1 || m_in_use.find(id) != m_in_use.end())
             return -1;
+        printf("从背包中移动道具到使用中的物品栏中\n");
         m_in_use[id] = m_package->consume(id, value);
         m_hp += m_in_use[id]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP);
         m_attack += m_in_use[id]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack);
@@ -61,8 +63,8 @@ int Player::consume(int id, EltemType type, int value, bool to_package, bool inu
         return -1;
     if (p->get_eltem_type() == EltemType::eCONSUME)
     {
-        m_hp += p->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP);
-        m_attack += p->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack);
+        m_hp += abs(value) * (p->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP));
+        m_attack += abs(value) * (p->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack));
     }
     return 0;
 }
