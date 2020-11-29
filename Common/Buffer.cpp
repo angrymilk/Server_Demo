@@ -111,7 +111,7 @@ int Buffer::get_one_code(char *data, size_t &size)
     }
 
     size = (size_t)(code_size & ((1 << 20) - 1));
-    printf("+++++++++++++ -----------    %d\n", size);
+    //printf("+++++++++++++ -----------    %d\n", size);
     memcpy(data, &m_recv_buffer[m_recv_head], size);
     m_recv_head += size;
     size = (size_t)code_size;

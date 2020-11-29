@@ -26,7 +26,7 @@ public:
         {
             if (m_vec[0][0] == nullptr)
             {
-                m_vec[0][0] = m_factory.create(info);
+                m_vec[0][0] = m_factory.create(info, 0);
                 m_posmap[info.id] = std::make_pair(0, 0);
             }
             m_vec[0][0]->set_amount(value);
@@ -42,8 +42,9 @@ public:
             }
             else
             {
-                m_vec[1][pos] = m_factory.create(info);
+                m_vec[1][pos] = m_factory.create(info, 0);
                 m_posmap[info.id] = std::make_pair(1, pos);
+                m_vec[1][pos]->set_amount(value);
             }
         }
         else if (info.mtype == EltemType::eCONSUME)
@@ -57,8 +58,9 @@ public:
             }
             else
             {
-                m_vec[2][pos] = m_factory.create(info);
+                m_vec[2][pos] = m_factory.create(info, 0);
                 m_posmap[info.id] = std::make_pair(2, pos);
+                m_vec[2][pos]->set_amount(value);
             }
         }
         else

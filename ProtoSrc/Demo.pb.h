@@ -1572,13 +1572,13 @@ class Redisplayerinfo PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kInuseFieldNumber = 5,
-    kPackageFieldNumber = 4,
+    kInuseFieldNumber = 4,
+    kPackageFieldNumber = 5,
     kHpFieldNumber = 1,
     kAttackFieldNumber = 2,
     kIdFieldNumber = 3,
   };
-  // repeated .Attributeitempro Inuse = 5;
+  // repeated .Attributeitempro Inuse = 4;
   int inuse_size() const;
   private:
   int _internal_inuse_size() const;
@@ -1596,7 +1596,7 @@ class Redisplayerinfo PROTOBUF_FINAL :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Attributeitempro >&
       inuse() const;
 
-  // required .Packagepro Package = 4;
+  // required .Packagepro Package = 5;
   bool has_package() const;
   private:
   bool _internal_has_package() const;
@@ -2681,7 +2681,46 @@ inline void Redisplayerinfo::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Redisplayerinfo.Id)
 }
 
-// required .Packagepro Package = 4;
+// repeated .Attributeitempro Inuse = 4;
+inline int Redisplayerinfo::_internal_inuse_size() const {
+  return inuse_.size();
+}
+inline int Redisplayerinfo::inuse_size() const {
+  return _internal_inuse_size();
+}
+inline void Redisplayerinfo::clear_inuse() {
+  inuse_.Clear();
+}
+inline ::Attributeitempro* Redisplayerinfo::mutable_inuse(int index) {
+  // @@protoc_insertion_point(field_mutable:Redisplayerinfo.Inuse)
+  return inuse_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Attributeitempro >*
+Redisplayerinfo::mutable_inuse() {
+  // @@protoc_insertion_point(field_mutable_list:Redisplayerinfo.Inuse)
+  return &inuse_;
+}
+inline const ::Attributeitempro& Redisplayerinfo::_internal_inuse(int index) const {
+  return inuse_.Get(index);
+}
+inline const ::Attributeitempro& Redisplayerinfo::inuse(int index) const {
+  // @@protoc_insertion_point(field_get:Redisplayerinfo.Inuse)
+  return _internal_inuse(index);
+}
+inline ::Attributeitempro* Redisplayerinfo::_internal_add_inuse() {
+  return inuse_.Add();
+}
+inline ::Attributeitempro* Redisplayerinfo::add_inuse() {
+  // @@protoc_insertion_point(field_add:Redisplayerinfo.Inuse)
+  return _internal_add_inuse();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Attributeitempro >&
+Redisplayerinfo::inuse() const {
+  // @@protoc_insertion_point(field_list:Redisplayerinfo.Inuse)
+  return inuse_;
+}
+
+// required .Packagepro Package = 5;
 inline bool Redisplayerinfo::_internal_has_package() const {
   bool value = (_has_bits_[0] & 0x00000001u) != 0;
   PROTOBUF_ASSUME(!value || package_ != nullptr);
@@ -2762,45 +2801,6 @@ inline void Redisplayerinfo::set_allocated_package(::Packagepro* package) {
   }
   package_ = package;
   // @@protoc_insertion_point(field_set_allocated:Redisplayerinfo.Package)
-}
-
-// repeated .Attributeitempro Inuse = 5;
-inline int Redisplayerinfo::_internal_inuse_size() const {
-  return inuse_.size();
-}
-inline int Redisplayerinfo::inuse_size() const {
-  return _internal_inuse_size();
-}
-inline void Redisplayerinfo::clear_inuse() {
-  inuse_.Clear();
-}
-inline ::Attributeitempro* Redisplayerinfo::mutable_inuse(int index) {
-  // @@protoc_insertion_point(field_mutable:Redisplayerinfo.Inuse)
-  return inuse_.Mutable(index);
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Attributeitempro >*
-Redisplayerinfo::mutable_inuse() {
-  // @@protoc_insertion_point(field_mutable_list:Redisplayerinfo.Inuse)
-  return &inuse_;
-}
-inline const ::Attributeitempro& Redisplayerinfo::_internal_inuse(int index) const {
-  return inuse_.Get(index);
-}
-inline const ::Attributeitempro& Redisplayerinfo::inuse(int index) const {
-  // @@protoc_insertion_point(field_get:Redisplayerinfo.Inuse)
-  return _internal_inuse(index);
-}
-inline ::Attributeitempro* Redisplayerinfo::_internal_add_inuse() {
-  return inuse_.Add();
-}
-inline ::Attributeitempro* Redisplayerinfo::add_inuse() {
-  // @@protoc_insertion_point(field_add:Redisplayerinfo.Inuse)
-  return _internal_add_inuse();
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Attributeitempro >&
-Redisplayerinfo::inuse() const {
-  // @@protoc_insertion_point(field_list:Redisplayerinfo.Inuse)
-  return inuse_;
 }
 
 #ifdef __GNUC__

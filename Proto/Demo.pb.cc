@@ -128,8 +128,8 @@ static void InitDefaultsscc_info_Redisplayerinfo_Demo_2eproto() {
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_Redisplayerinfo_Demo_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 2, 0, InitDefaultsscc_info_Redisplayerinfo_Demo_2eproto}, {
-      &scc_info_Packagepro_Demo_2eproto.base,
-      &scc_info_Attributeitempro_Demo_2eproto.base,}};
+      &scc_info_Attributeitempro_Demo_2eproto.base,
+      &scc_info_Packagepro_Demo_2eproto.base,}};
 
 static void InitDefaultsscc_info_Reqest_Demo_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -252,13 +252,13 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Demo_2eproto::offsets[] PROTOB
   PROTOBUF_FIELD_OFFSET(::Redisplayerinfo, hp_),
   PROTOBUF_FIELD_OFFSET(::Redisplayerinfo, attack_),
   PROTOBUF_FIELD_OFFSET(::Redisplayerinfo, id_),
-  PROTOBUF_FIELD_OFFSET(::Redisplayerinfo, package_),
   PROTOBUF_FIELD_OFFSET(::Redisplayerinfo, inuse_),
+  PROTOBUF_FIELD_OFFSET(::Redisplayerinfo, package_),
   1,
   2,
   3,
-  0,
   ~0u,
+  0,
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 8, sizeof(::Reqest)},
@@ -297,9 +297,9 @@ const char descriptor_table_protodef_Demo_2eproto[] PROTOBUF_SECTION_VARIABLE(pr
   "\005\022\021\n\tEltemtype\030\003 \002(\005\022\021\n\tattribute\030\004 \003(\005\""
   "0\n\nPackagepro\022\"\n\007Itempro\030\001 \003(\0132\021.Attribu"
   "teitempro\"y\n\017Redisplayerinfo\022\n\n\002Hp\030\001 \002(\005"
-  "\022\016\n\006Attack\030\002 \002(\005\022\n\n\002Id\030\003 \002(\005\022\034\n\007Package\030"
-  "\004 \002(\0132\013.Packagepro\022 \n\005Inuse\030\005 \003(\0132\021.Attr"
-  "ibuteitempro"
+  "\022\016\n\006Attack\030\002 \002(\005\022\n\n\002Id\030\003 \002(\005\022 \n\005Inuse\030\004 "
+  "\003(\0132\021.Attributeitempro\022\034\n\007Package\030\005 \002(\0132"
+  "\013.Packagepro"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Demo_2eproto_deps[1] = {
 };
@@ -2655,23 +2655,23 @@ const char* Redisplayerinfo::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // required .Packagepro Package = 4;
+      // repeated .Attributeitempro Inuse = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
-          ptr = ctx->ParseMessage(_internal_mutable_package(), ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // repeated .Attributeitempro Inuse = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
           ptr -= 1;
           do {
             ptr += 1;
             ptr = ctx->ParseMessage(_internal_add_inuse(), ptr);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
+        } else goto handle_unusual;
+        continue;
+      // required .Packagepro Package = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
+          ptr = ctx->ParseMessage(_internal_mutable_package(), ptr);
+          CHK_(ptr);
         } else goto handle_unusual;
         continue;
       default: {
@@ -2722,20 +2722,20 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_id(), target);
   }
 
-  // required .Packagepro Package = 4;
-  if (cached_has_bits & 0x00000001u) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        4, _Internal::package(this), target, stream);
-  }
-
-  // repeated .Attributeitempro Inuse = 5;
+  // repeated .Attributeitempro Inuse = 4;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_inuse_size()); i < n; i++) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(5, this->_internal_inuse(i), target, stream);
+      InternalWriteMessage(4, this->_internal_inuse(i), target, stream);
+  }
+
+  // required .Packagepro Package = 5;
+  if (cached_has_bits & 0x00000001u) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        5, _Internal::package(this), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2751,7 +2751,7 @@ size_t Redisplayerinfo::RequiredFieldsByteSizeFallback() const {
   size_t total_size = 0;
 
   if (_internal_has_package()) {
-    // required .Packagepro Package = 4;
+    // required .Packagepro Package = 5;
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *package_);
@@ -2785,7 +2785,7 @@ size_t Redisplayerinfo::ByteSizeLong() const {
   size_t total_size = 0;
 
   if (((_has_bits_[0] & 0x0000000f) ^ 0x0000000f) == 0) {  // All required fields are present.
-    // required .Packagepro Package = 4;
+    // required .Packagepro Package = 5;
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *package_);
@@ -2812,7 +2812,7 @@ size_t Redisplayerinfo::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated .Attributeitempro Inuse = 5;
+  // repeated .Attributeitempro Inuse = 4;
   total_size += 1UL * this->_internal_inuse_size();
   for (const auto& msg : this->inuse_) {
     total_size +=

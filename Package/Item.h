@@ -50,9 +50,10 @@ class Item : public AbstractItem, std::enable_shared_from_this<Item>
 public:
     Item(ItemInfo info) : AbstractItem(info.mtype, info.id)
     {
+
         for (int i = 0; i < info.mmotype.size(); i++)
         {
-            m_map[info.mmotype[i]] = std::make_shared<ItemAttribute>(shared_from_this(), info.mattrtype[i], info.value[i]);
+            m_map[info.mmotype[i]] = std::make_shared<ItemAttribute>(this, info.mattrtype[i], info.value[i]);
         }
     }
 
@@ -74,7 +75,7 @@ private:
 class ItemAttribute
 {
 public:
-    ItemAttribute(std::shared_ptr<Item> point, std::vector<EltemAttributeType> info, std::vector<int> values) : m_item(point)
+    ItemAttribute(Item *point, std::vector<EltemAttributeType> info, std::vector<int> values) : m_item(point)
     {
         for (int i = 0; i < info.size(); i++)
         {
@@ -87,6 +88,6 @@ public:
 
 private:
     std::unordered_map<EltemAttributeType, int> m_attribute_map;
-    std::shared_ptr<Item> m_item;
+    Item *m_item;
 };
 #endif

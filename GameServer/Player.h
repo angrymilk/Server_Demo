@@ -15,6 +15,8 @@ public:
     {
         m_uin = uin;
         m_package.reset(new Package);
+        m_attack = 100;
+        m_hp = 100;
     }
 
     ~Player();

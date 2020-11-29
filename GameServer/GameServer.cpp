@@ -3,7 +3,9 @@
 #include <stdlib.h>
 GameServer::GameServer(std::string ip, int port)
 {
-    m_redis_server.reset(new RedisServer("127.0.0.1", 6379));
+    m_redis_server.reset(new RedisServer);
+    m_redis_server->Init();
+    m_redis_server->Connect();
     m_server.reset(new BaseServer(ip, port));
     m_server->set_read_callback(std::bind(&GameServer::on_message, this, std::placeholders::_1));
     m_thread_task.Start();
@@ -33,7 +35,6 @@ void GameServer::get_one_code(TCPSocket &con)
         size_t data_size = MAX_SS_PACKAGE_SIZE;
         std::string m_sRvMsgBuf;
         m_sRvMsgBuf.reserve(MAX_SS_PACKAGE_SIZE);
-        printf("[GameServer][GameServer.cpp:%d][INFO]:\n", __LINE__);
         ret = con.m_buffer->get_one_code(const_cast<char *>(m_sRvMsgBuf.c_str()), data_size);
         if (ret > 0)
         {
@@ -120,7 +121,9 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
             }
         }
         info.mtype = (EltemType)req.eltemtype();
-        m_map_players[req.uid()].player->add(info, req.pos(), req.value(), req.dropfrom());
+        int ret = m_map_players[req.uid()].player->add(info, req.pos(), req.value(), req.dropfrom());
+        if (ret)
+            return;
     }
     else
     {
@@ -151,32 +154,35 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
     //存储背包相关的信息
     std::shared_ptr<Package> ptr = m_map_players[req.uid()].player->get_package();
     std::vector<std::vector<std::shared_ptr<AbstractItem>>> vec = ptr->get_vec();
-    //Packagepro *packagein = tmp.add_package();
-    Packagepro *packagein = tmp.mutable_package();
-    for (int i = 0; i > vec.size(); i++)
+    if (vec.size() > 0)
     {
-        for (int j = 0; j < vec[i].size(); j++)
+        Packagepro *packagein = tmp.mutable_package();
+        for (int i = 0; i > vec.size(); i++)
         {
-            Attributeitempro *temp = packagein->add_itempro();
+            for (int j = 0; j < vec[i].size(); j++)
+            {
+                printf("asdfsafdasfdsadfdsad    \n");
+                Attributeitempro *temp = packagein->add_itempro();
 
-            temp->set_amount(vec[i][j]->get_amount());
-            temp->set_id(vec[i][j]->get_uid());
-            temp->set_eltemtype(vec[i][j]->get_eltem_type());
-            temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack));
-            temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP));
-            temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_Attack));
-            temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_HP));
-            temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_Attack));
-            temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_HP));
+                temp->set_amount(vec[i][j]->get_amount());
+                temp->set_id(vec[i][j]->get_uid());
+                temp->set_eltemtype(vec[i][j]->get_eltem_type());
+                temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack));
+                temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP));
+                temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_Attack));
+                temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_HP));
+                temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_Attack));
+                temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_HP));
+            }
         }
     }
 
-    char key[4];
+    char key[5];
     char out[1001];
-    m_redis_server->Connect();
-    snprintf(key, 4, "%d", tmp.id());
+    snprintf(key, 5, "%d", tmp.id());
     tmp.SerializePartialToArray(out, tmp.ByteSize());
-    m_redis_server->SetByBit(key, out, tmp.ByteSize());
+    printf(">>>>>>>>>>>>>>>>>>..   %d  %d\n", strlen(out), tmp.ByteSize());
+    m_redis_server->Set(key, tmp.ByteSize(), out);
     //############################################################  结束数据格式化  ##################################################################
     Response res;
     res.set_uid(req.uid());
@@ -203,15 +209,16 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
     if (req.init() == 1)
     {
         int id = req.uid();
-        int len;
-        char idque[4];
-        snprintf(idque, 4, "%d", id);
-        char *result;
-        m_redis_server->GetByBit(result, (void **)&result, &len);
+        int len = 0;
+        char idque[20];
+        snprintf(idque, 5, "%d", id);
+        char result[507];
+        m_redis_server->Get(idque, result, &len);
         Redisplayerinfo tmp;
         tmp.ParseFromArray(result, len);
+        printf("||||||||||||||||    -------------       query          %d\n", len);
         printf("从redis中读取客户端断线前的数据信息\n");
-        printf("################# Player Id = %d      Player Hp = %d    Player Attakc = %d   ###############\n", tmp.id(), tmp.hp(), tmp.attack());
+        printf("################# Player Id = %d      Player Hp = %d    Player Attakc = %d   %d ###############\n", tmp.id(), tmp.hp(), tmp.attack(), tmp.inuse_size());
         for (int i = 0; i < tmp.inuse_size(); i++)
         {
             Attributeitempro temp = tmp.inuse(i);
@@ -222,7 +229,7 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
         for (int i = 0; i < packageinfo.itempro_size(); i++)
         {
             Attributeitempro temp = packageinfo.itempro(i);
-            printf("################# 背包中的物品id: %d      物品数量: %d   物品类型: %d\n", temp.id(), temp.amount(), temp.eltemtype());
+            printf("################# 放在背包中的物品id: %d      物品数量: %d   物品类型: %d\n", temp.id(), temp.amount(), temp.eltemtype());
         }
     }
 
@@ -234,7 +241,6 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
     MsgHead head;
     head.m_message_len = res.ByteSize() + MESSAGE_HEAD_SIZE;
     int temp = head.m_message_len;
-    head.m_message_len = (head.m_message_len | (1 << 21));
     int codeLength = 0;
     head.encode(data_, codeLength);
     res.SerializePartialToArray(data_ + MESSAGE_HEAD_SIZE, res.ByteSize());

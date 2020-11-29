@@ -4,7 +4,10 @@
 class Equip : public Item
 {
 public:
-    Equip(ItemInfo info) : Item(info) {}
+    Equip(ItemInfo info, int value) : Item(info)
+    {
+        set_amount(value);
+    }
 
     int get_uid()
     {

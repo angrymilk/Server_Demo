@@ -58,6 +58,6 @@ message Redisplayerinfo
   required int32 Hp = 1;
   required int32 Attack = 2;
   required int32 Id = 3;
-  required Packagepro Package = 4;
-  repeated Attributeitempro Inuse = 5;
+  repeated Attributeitempro Inuse = 4;
+  required Packagepro Package = 5;
 }

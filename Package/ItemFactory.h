@@ -9,14 +9,14 @@ class ItemFactory
 {
 public:
     ItemFactory() {}
-    std::shared_ptr<AbstractItem> create(ItemInfo info)
+    std::shared_ptr<AbstractItem> create(ItemInfo info, int value)
     {
         if (info.mtype == EltemType::eMoney)
-            return std::make_shared<Money>(info);
+            return std::make_shared<Money>(info, value);
         else if (info.mtype == EltemType::eEQUIP)
-            return std::make_shared<Equip>(info);
+            return std::make_shared<Equip>(info, value);
         else if (info.mtype == EltemType::eCONSUME)
-            return std::make_shared<Consume>(info);
+            return std::make_shared<Consume>(info, value);
         else
             return nullptr;
     }

@@ -5,7 +5,10 @@
 class Money : public AbstractItem
 {
 public:
-    Money(ItemInfo info) : AbstractItem(info.mtype, info.id) {}
+    Money(ItemInfo info, int value) : AbstractItem(info.mtype, info.id)
+    {
+        set_amount(value);
+    }
 
     int get_uid()
     {

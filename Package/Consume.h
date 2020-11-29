@@ -4,7 +4,10 @@
 class Consume : public Item
 {
 public:
-    Consume(ItemInfo info) : Item(info) {}
+    Consume(ItemInfo info, int value) : Item(info)
+    {
+        set_amount(value);
+    }
 
     int get_uid()
     {

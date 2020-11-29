@@ -10,103 +10,64 @@
 class RedisServer
 {
 public:
-    RedisServer(const std::string &ip, int port) : m_ip(ip), m_port(port), m_pcmd(new char[20])
-    {
-    }
+    RedisServer();
+    ~RedisServer();
 
-    int GetByBit(const std::string &_key, void **_buf, int *_len)
-    {
-        snprintf(m_pcmd, 20, "GET %s", _key.c_str());
-        m_reply = (redisReply *)redisCommand(m_context, m_pcmd);
+    int Init(const std::string &_ip = "127.0.0.1", int port = 6379);
 
-        if (m_reply == nullptr || m_reply->type == REDIS_REPLY_ERROR)
+    int Connect();
+
+    int DisConnect();
+
+    int FreeReply();
+
+    int Restart();
+
+    template <typename T>
+    int SetByString(const std::string &key, T &_t)
+    {
+        FreeReply();
+
+        m_ss << "SET " << key << " " << _t;
+        m_ss >> m_cmd;
+
+        m_reply = (redisReply)redisCommand(m_context, m_cmd.c_str());
+
+        if (m_reply == nullptr || m_reply->type != REDIS_REPLY_STATUS)
         {
             // error
-            std::cout << "get faild" << std::endl;
             Restart();
-            return -1;
-        }
-        std::cout << "get sucess" << std::endl;
-        *_buf = m_reply->str;
-        *_len = m_reply->len;
-        return 0;
-    }
-
-    ~RedisServer()
-    {
-        DisConnect();
-        FreeReply();
-        delete[] m_pcmd;
-        std::cout << "toredis dtor!" << std::endl;
-    }
-
-    int Restart()
-    {
-        DisConnect();
-        FreeReply();
-        if (Connect())
-        {
-        }
-    }
-
-    bool Connect()
-    {
-        m_context = redisConnect(m_ip.c_str(), m_port);
-
-        if (m_context == nullptr || m_context->err)
-        {
-            // error tracer log
-            std::cout << "connect faild" << std::endl;
-            return false;
-        }
-        // demo 用的 redis 没有设置验证
-        std::cout << "connect sucess" << std::endl;
-        return true;
-    }
-
-    bool DisConnect()
-    {
-        if (m_context)
-        {
-            redisFree(m_context);
-            m_context = nullptr;
-        }
-        return true;
-    }
-
-    int FreeReply()
-    {
-        if (m_reply)
-        {
-            freeReplyObject(m_reply);
-            m_reply = nullptr;
         }
         return 0;
     }
 
-    int SetByBit(const std::string &_key, void *_buf, int _len)
-    {
-        std::cout << "start set\n";
-        snprintf(m_pcmd, 20, "SET %s \%b", _key.c_str());
-        std::cout << "cmd is " << m_pcmd << std::endl;
-        m_reply = (redisReply *)redisCommand(m_context, m_pcmd, _buf, _len);
-        std::cout << "redisCommand failed";
-        if (m_reply == nullptr || m_reply->type == REDIS_REPLY_ERROR)
-        {
-            // error
-            std::cout << "set faild" << std::endl;
-            Restart();
-            return -1;
-        }
-        std::cout << "set sucess" << std::endl;
-        return 0;
-    }
+    int Set(const char *_key, int len, const char *format);
+
+    int Get(const char *_key, char *_buf, int *_len);
+
+    int HSetField(const char *_key, const char *_field, const char *_format, ...);
+
+    int HGetField(const char *key, const char *_field, char *_usrbuf, int *_len);
+
+    int HMSET(const char *_key, const char *_format, ...);
+
+    // 传递二维数组, 获取整个hash表
+    int HMGET(const char *_key, char **_bufv, int *_count);
+
+    int Del(const char *_key);
 
 private:
+    std::stringstream m_ss;
+    std::string m_cmd;
+
     redisReply *m_reply;
     redisContext *m_context;
-    char *m_pcmd;
+
     std::string m_ip;
     int m_port;
+
+    char *m_pbuf;
+    int m_bufsize;
 };
+
 #endif

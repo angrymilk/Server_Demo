@@ -26,7 +26,7 @@ int Player::add(ItemInfo info, int pos, int value, bool to_package)
         //同样道具目前只能个数为1
         if (value != 1 || info.mtype != EltemType::eEQUIP || m_in_use.find(info.id) != m_in_use.end())
             return -1;
-        m_in_use[info.id] = std::make_shared<Equip>(info);
+        m_in_use[info.id] = std::make_shared<Equip>(info, value);
         m_hp += m_in_use[info.id]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP);
         m_attack += m_in_use[info.id]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack);
         return 0;
