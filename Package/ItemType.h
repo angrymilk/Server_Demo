@@ -8,8 +8,8 @@
 enum EltemType
 {
     eMoney,
-    eCONSUME,
     eEQUIP,
+    eCONSUME,
 };
 
 enum EltemAttributeType

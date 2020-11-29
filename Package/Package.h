@@ -16,11 +16,13 @@ public:
         m_vec[0].resize(1);
         m_vec[1].resize(10);
         m_vec[2].resize(10);
+        //m_vec[0][0] = m_factory.create(info, 0);
     }
     //这里的value代表的是物品个数，info中的value代表的是物品和道具属性的值
     //如果物品之前已经在背包中有同样id的，那么直接就重叠，不然就在客户端传进来的pos中放入新的类型的背包
     int add(ItemInfo info, int pos, int value)
     {
+        printf("In Add..................\n");
         int id = 0;
         if (info.mtype == EltemType::eMoney)
         {
@@ -35,6 +37,7 @@ public:
         {
             if (m_posmap.find(info.id) != m_posmap.end())
             {
+                printf("In Find..................\n");
                 if (m_num[1] == 10)
                     return -1;
                 pos = m_posmap[info.id].second;
@@ -45,6 +48,7 @@ public:
                 m_vec[1][pos] = m_factory.create(info, 0);
                 m_posmap[info.id] = std::make_pair(1, pos);
                 m_vec[1][pos]->set_amount(value);
+                printf("In Equip..................     %d\n", m_vec[1][pos]->get_amount());
             }
         }
         else if (info.mtype == EltemType::eCONSUME)
@@ -96,9 +100,14 @@ public:
         return m_vec[m_posmap[id].first][m_posmap[id].second]->get_amount();
     }
 
-    std::vector<std::vector<std::shared_ptr<AbstractItem>>> get_vec()
+    std::shared_ptr<AbstractItem> get_vec(int i, int j)
     {
-        return m_vec;
+        return m_vec[i][j];
+    }
+
+    std::unordered_map<int, std::pair<int, int>> get_map()
+    {
+        return m_posmap;
     }
 
 private:

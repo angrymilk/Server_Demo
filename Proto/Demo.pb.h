@@ -1255,7 +1255,7 @@ class Attributeitempro PROTOBUF_FINAL :
   void _internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // required int32 Amount = 2;
+  // optional int32 Amount = 2;
   bool has_amount() const;
   private:
   bool _internal_has_amount() const;
@@ -1268,7 +1268,7 @@ class Attributeitempro PROTOBUF_FINAL :
   void _internal_set_amount(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // required int32 Eltemtype = 3;
+  // optional int32 Eltemtype = 3;
   bool has_eltemtype() const;
   private:
   bool _internal_has_eltemtype() const;
@@ -1284,9 +1284,6 @@ class Attributeitempro PROTOBUF_FINAL :
   // @@protoc_insertion_point(class_scope:Attributeitempro)
  private:
   class _Internal;
-
-  // helper for ByteSizeLong()
-  size_t RequiredFieldsByteSizeFallback() const;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
@@ -1596,7 +1593,7 @@ class Redisplayerinfo PROTOBUF_FINAL :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Attributeitempro >&
       inuse() const;
 
-  // required .Packagepro Package = 5;
+  // optional .Packagepro Package = 5;
   bool has_package() const;
   private:
   bool _internal_has_package() const;
@@ -2447,7 +2444,7 @@ inline void Attributeitempro::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Attributeitempro.Id)
 }
 
-// required int32 Amount = 2;
+// optional int32 Amount = 2;
 inline bool Attributeitempro::_internal_has_amount() const {
   bool value = (_has_bits_[0] & 0x00000002u) != 0;
   return value;
@@ -2475,7 +2472,7 @@ inline void Attributeitempro::set_amount(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Attributeitempro.Amount)
 }
 
-// required int32 Eltemtype = 3;
+// optional int32 Eltemtype = 3;
 inline bool Attributeitempro::_internal_has_eltemtype() const {
   bool value = (_has_bits_[0] & 0x00000004u) != 0;
   return value;
@@ -2720,7 +2717,7 @@ Redisplayerinfo::inuse() const {
   return inuse_;
 }
 
-// required .Packagepro Package = 5;
+// optional .Packagepro Package = 5;
 inline bool Redisplayerinfo::_internal_has_package() const {
   bool value = (_has_bits_[0] & 0x00000001u) != 0;
   PROTOBUF_ASSUME(!value || package_ != nullptr);

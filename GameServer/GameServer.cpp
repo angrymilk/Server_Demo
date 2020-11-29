@@ -136,9 +136,16 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
     tmp.set_attack(m_map_players[req.uid()].player->get_attack());
     tmp.set_id(req.uid());
     //存储目前正在使用的道具的信息
+    if (m_map_players[req.uid()].player->m_in_use.begin() == m_map_players[req.uid()].player->m_in_use.end())
+    {
+        Attributeitempro *temp = tmp.add_inuse();
+        temp->set_id(-1);
+        temp->add_attribute(-1);
+    }
     for (unordered_map<int, std::shared_ptr<AbstractItem>>::iterator iter = m_map_players[req.uid()].player->m_in_use.begin(); iter != m_map_players[req.uid()].player->m_in_use.end(); iter++)
     {
         Attributeitempro *temp = tmp.add_inuse();
+        //printf("fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuk\n");
 
         std::shared_ptr<AbstractItem> ptr = m_map_players[req.uid()].player->m_in_use[iter->first];
         temp->set_amount(ptr->get_amount());
@@ -153,27 +160,24 @@ void GameServer::solve_add(TCPSocket &con, std::string &data, int datasize)
     }
     //存储背包相关的信息
     std::shared_ptr<Package> ptr = m_map_players[req.uid()].player->get_package();
-    std::vector<std::vector<std::shared_ptr<AbstractItem>>> vec = ptr->get_vec();
-    if (vec.size() > 0)
+    std::unordered_map<int, std::pair<int, int>> _map = ptr->get_map();
+    if (_map.begin() != _map.end())
     {
         Packagepro *packagein = tmp.mutable_package();
-        for (int i = 0; i > vec.size(); i++)
+        for (std::unordered_map<int, std::pair<int, int>>::iterator iter = _map.begin(); iter != _map.end(); iter++)
         {
-            for (int j = 0; j < vec[i].size(); j++)
-            {
-                printf("asdfsafdasfdsadfdsad    \n");
-                Attributeitempro *temp = packagein->add_itempro();
-
-                temp->set_amount(vec[i][j]->get_amount());
-                temp->set_id(vec[i][j]->get_uid());
-                temp->set_eltemtype(vec[i][j]->get_eltem_type());
-                temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack));
-                temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP));
-                temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_Attack));
-                temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_HP));
-                temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_Attack));
-                temp->add_attribute(vec[i][j]->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_HP));
-            }
+            printf("fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuk\n");
+            Attributeitempro *temp = packagein->add_itempro();
+            int i = iter->second.first, j = iter->second.second;
+            temp->set_amount(ptr->get_vec(i, j)->get_amount());
+            temp->set_id(ptr->get_vec(i, j)->get_uid());
+            temp->set_eltemtype(ptr->get_vec(i, j)->get_eltem_type());
+            temp->add_attribute(ptr->get_vec(i, j)->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack));
+            temp->add_attribute(ptr->get_vec(i, j)->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP));
+            temp->add_attribute(ptr->get_vec(i, j)->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_Attack));
+            temp->add_attribute(ptr->get_vec(i, j)->get_attribute(EltemModuleType::eltem_Module_Power, EltemAttributeType::eltem_Attribute_HP));
+            temp->add_attribute(ptr->get_vec(i, j)->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_Attack));
+            temp->add_attribute(ptr->get_vec(i, j)->get_attribute(EltemModuleType::eltem_Module_Insert, EltemAttributeType::eltem_Attribute_HP));
         }
     }
 
@@ -222,9 +226,11 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
         for (int i = 0; i < tmp.inuse_size(); i++)
         {
             Attributeitempro temp = tmp.inuse(i);
+            if (temp.id() == -1)
+                break;
             printf("################# 正在处于使用中的道具 道具id: %d      道具数量: %d\n", temp.id(), temp.amount());
         }
-        printf("背包中的物品类型id 0:代表金钱  1:代表道具  2:代表消耗品\n");
+        printf("################# 背包中的物品类型id 0:代表金钱  1:代表道具  2:代表消耗品\n");
         Packagepro packageinfo = tmp.package();
         for (int i = 0; i < packageinfo.itempro_size(); i++)
         {

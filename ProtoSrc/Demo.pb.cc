@@ -293,12 +293,12 @@ const char descriptor_table_protodef_Demo_2eproto[] PROTOBUF_SECTION_VARIABLE(pr
   "\022\013\n\003Pos\030\006 \001(\005\022\r\n\005Inuse\030\007 \001(\010\022\020\n\010Dropfrom"
   "\030\010 \001(\010\022\030\n\004Mode\030\t \003(\0132\n.Modelinfo\"\'\n\nPack"
   "agereq\022\013\n\003Uid\030\001 \002(\005\022\014\n\004Init\030\002 \002(\005\"T\n\020Att"
-  "ributeitempro\022\n\n\002Id\030\001 \002(\005\022\016\n\006Amount\030\002 \002("
-  "\005\022\021\n\tEltemtype\030\003 \002(\005\022\021\n\tattribute\030\004 \003(\005\""
+  "ributeitempro\022\n\n\002Id\030\001 \002(\005\022\016\n\006Amount\030\002 \001("
+  "\005\022\021\n\tEltemtype\030\003 \001(\005\022\021\n\tattribute\030\004 \003(\005\""
   "0\n\nPackagepro\022\"\n\007Itempro\030\001 \003(\0132\021.Attribu"
   "teitempro\"y\n\017Redisplayerinfo\022\n\n\002Hp\030\001 \002(\005"
   "\022\016\n\006Attack\030\002 \002(\005\022\n\n\002Id\030\003 \002(\005\022 \n\005Inuse\030\004 "
-  "\003(\0132\021.Attributeitempro\022\034\n\007Package\030\005 \002(\0132"
+  "\003(\0132\021.Attributeitempro\022\034\n\007Package\030\005 \001(\0132"
   "\013.Packagepro"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Demo_2eproto_deps[1] = {
@@ -1990,7 +1990,7 @@ class Attributeitempro::_Internal {
     (*has_bits)[0] |= 4u;
   }
   static bool MissingRequiredFields(const HasBits& has_bits) {
-    return ((has_bits[0] & 0x00000007) ^ 0x00000007) != 0;
+    return ((has_bits[0] & 0x00000001) ^ 0x00000001) != 0;
   }
 };
 
@@ -2077,7 +2077,7 @@ const char* Attributeitempro::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPA
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // required int32 Amount = 2;
+      // optional int32 Amount = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
           _Internal::set_has_amount(&has_bits);
@@ -2085,7 +2085,7 @@ const char* Attributeitempro::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPA
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // required int32 Eltemtype = 3;
+      // optional int32 Eltemtype = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
           _Internal::set_has_eltemtype(&has_bits);
@@ -2144,13 +2144,13 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_id(), target);
   }
 
-  // required int32 Amount = 2;
+  // optional int32 Amount = 2;
   if (cached_has_bits & 0x00000002u) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_amount(), target);
   }
 
-  // required int32 Eltemtype = 3;
+  // optional int32 Eltemtype = 3;
   if (cached_has_bits & 0x00000004u) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_eltemtype(), target);
@@ -2170,55 +2170,15 @@ failure:
   return target;
 }
 
-size_t Attributeitempro::RequiredFieldsByteSizeFallback() const {
-// @@protoc_insertion_point(required_fields_byte_size_fallback_start:Attributeitempro)
-  size_t total_size = 0;
-
-  if (_internal_has_id()) {
-    // required int32 Id = 1;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_id());
-  }
-
-  if (_internal_has_amount()) {
-    // required int32 Amount = 2;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_amount());
-  }
-
-  if (_internal_has_eltemtype()) {
-    // required int32 Eltemtype = 3;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_eltemtype());
-  }
-
-  return total_size;
-}
 size_t Attributeitempro::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:Attributeitempro)
   size_t total_size = 0;
 
-  if (((_has_bits_[0] & 0x00000007) ^ 0x00000007) == 0) {  // All required fields are present.
-    // required int32 Id = 1;
+  // required int32 Id = 1;
+  if (_internal_has_id()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_id());
-
-    // required int32 Amount = 2;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_amount());
-
-    // required int32 Eltemtype = 3;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_eltemtype());
-
-  } else {
-    total_size += RequiredFieldsByteSizeFallback();
   }
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -2233,6 +2193,23 @@ size_t Attributeitempro::ByteSizeLong() const {
     total_size += data_size;
   }
 
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000006u) {
+    // optional int32 Amount = 2;
+    if (cached_has_bits & 0x00000002u) {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+          this->_internal_amount());
+    }
+
+    // optional int32 Eltemtype = 3;
+    if (cached_has_bits & 0x00000004u) {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+          this->_internal_eltemtype());
+    }
+
+  }
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
         _internal_metadata_, total_size, &_cached_size_);
@@ -2537,7 +2514,7 @@ class Redisplayerinfo::_Internal {
     (*has_bits)[0] |= 1u;
   }
   static bool MissingRequiredFields(const HasBits& has_bits) {
-    return ((has_bits[0] & 0x0000000f) ^ 0x0000000f) != 0;
+    return ((has_bits[0] & 0x0000000e) ^ 0x0000000e) != 0;
   }
 };
 
@@ -2667,7 +2644,7 @@ const char* Redisplayerinfo::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
         } else goto handle_unusual;
         continue;
-      // required .Packagepro Package = 5;
+      // optional .Packagepro Package = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
           ptr = ctx->ParseMessage(_internal_mutable_package(), ptr);
@@ -2730,7 +2707,7 @@ failure:
       InternalWriteMessage(4, this->_internal_inuse(i), target, stream);
   }
 
-  // required .Packagepro Package = 5;
+  // optional .Packagepro Package = 5;
   if (cached_has_bits & 0x00000001u) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
@@ -2749,13 +2726,6 @@ failure:
 size_t Redisplayerinfo::RequiredFieldsByteSizeFallback() const {
 // @@protoc_insertion_point(required_fields_byte_size_fallback_start:Redisplayerinfo)
   size_t total_size = 0;
-
-  if (_internal_has_package()) {
-    // required .Packagepro Package = 5;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *package_);
-  }
 
   if (_internal_has_hp()) {
     // required int32 Hp = 1;
@@ -2784,12 +2754,7 @@ size_t Redisplayerinfo::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:Redisplayerinfo)
   size_t total_size = 0;
 
-  if (((_has_bits_[0] & 0x0000000f) ^ 0x0000000f) == 0) {  // All required fields are present.
-    // required .Packagepro Package = 5;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *package_);
-
+  if (((_has_bits_[0] & 0x0000000e) ^ 0x0000000e) == 0) {  // All required fields are present.
     // required int32 Hp = 1;
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
@@ -2817,6 +2782,14 @@ size_t Redisplayerinfo::ByteSizeLong() const {
   for (const auto& msg : this->inuse_) {
     total_size +=
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
+
+  // optional .Packagepro Package = 5;
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *package_);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
