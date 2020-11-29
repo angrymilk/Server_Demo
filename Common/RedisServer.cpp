@@ -2,7 +2,7 @@
 #include <string.h>
 RedisServer::RedisServer() : m_reply(nullptr), m_context(nullptr), m_pbuf(new char[512]), m_bufsize(512)
 {
-    std::cout << "toredis ctor!" << std::endl;
+    std::cout << "RedisServer构造成功!" << std::endl;
 }
 
 RedisServer::~RedisServer()
@@ -10,7 +10,7 @@ RedisServer::~RedisServer()
     FreeReply();
     DisConnect();
     delete[] m_pbuf;
-    std::cout << "toredis dtor!" << std::endl;
+    std::cout << "RedisServer被析构了!" << std::endl;
 }
 
 int RedisServer::Init(const std::string &_ip, int _port)
@@ -69,14 +69,10 @@ int RedisServer::FreeReply()
 int RedisServer::Set(const char *_key, int len, const char *_format)
 {
     FreeReply();
-    //printf("oookokokokokokokoko     %d\n", len);
-    //snprintf(m_pbuf, 512, "SET %s %b", _key, (size_t)_format);
-
     m_reply = (redisReply *)redisCommand(m_context, "SET %s %s", _key, _format);
 
     if (m_reply == nullptr || m_reply->type == REDIS_REPLY_ERROR)
     {
-        // error
         std::cerr << "set faild " << std::endl;
         Restart();
         return -1;
@@ -91,7 +87,6 @@ int RedisServer::Get(const char *_key, char *_buf, int *_len)
     m_reply = (redisReply *)redisCommand(m_context, "GET %s", _key);
     if (m_reply == nullptr || m_reply->type == REDIS_REPLY_ERROR)
     {
-        // error
         std::cerr << "get faild" << std::endl;
         Restart();
         return -1;
@@ -101,109 +96,7 @@ int RedisServer::Get(const char *_key, char *_buf, int *_len)
     {
         strncpy(_buf, m_reply->str, m_reply->len);
         *_len = m_reply->len;
-        //strncpy(_buf, m_reply->str, 30);
-        //*_len = 30;
     }
 
-    return 0;
-}
-
-int RedisServer::HSetField(const char *_key, const char *_field, const char *_format, ...)
-{
-    FreeReply();
-
-    va_list ap;
-    va_start(ap, _format);
-    snprintf(m_pbuf, m_bufsize, "HSET %s %s %s", _key, _field, _format);
-
-    m_reply = (redisReply *)redisCommand(m_context, m_pbuf, ap);
-    va_end(ap);
-
-    if (m_reply == nullptr || m_reply->type == REDIS_REPLY_ERROR)
-    {
-        // error
-        std::cerr << "set faild" << std::endl;
-        Restart();
-        return -1;
-    }
-    std::cout << "set sucess" << std::endl;
-    return 0;
-}
-
-int RedisServer::HGetField(const char *_key, const char *_field, char *_usrbuf, int *_len)
-{
-    FreeReply();
-
-    m_reply = (redisReply *)redisCommand(m_context, "HGET %s %s", _key, _field);
-    if (m_reply == nullptr || m_reply->type == REDIS_REPLY_ERROR)
-    {
-        // error
-        std::cout << "set faild" << std::endl;
-        Restart();
-        return -1;
-    }
-    if (m_reply->type == REDIS_REPLY_STRING)
-    {
-        strncpy(_usrbuf, m_reply->str, m_reply->len);
-        *_len = m_reply->len;
-    }
-
-    return 0;
-}
-
-int RedisServer::HMSET(const char *_key, const char *format, ...)
-{
-    FreeReply();
-
-    va_list ap;
-    va_start(ap, format);
-    snprintf(m_pbuf, m_bufsize, "HMSet %s %s", _key, format);
-
-    m_reply = (redisReply *)redisvCommand(m_context, m_pbuf, ap);
-    va_end(ap);
-
-    if (m_reply == nullptr || m_reply->type == REDIS_REPLY_ERROR)
-    {
-        FreeReply();
-        return -1;
-    }
-
-    return 0;
-}
-
-int RedisServer::HMGET(const char *_key, char **_bufv, int *_count)
-{
-    FreeReply();
-
-    m_reply = (redisReply *)redisCommand(m_context, "HGETALL %s", _key);
-    if (m_reply == nullptr || m_reply->type == REDIS_REPLY_ERROR)
-    {
-        FreeReply();
-        return -1;
-    }
-
-    if (m_reply->type == REDIS_REPLY_ARRAY)
-    {
-        for (uint i = 0; i < m_reply->elements; ++i)
-        {
-            strncpy(_bufv[i], m_reply->element[i]->str, m_reply->element[i]->len);
-        }
-        *_count = m_reply->elements;
-    }
-    return 0;
-}
-
-int RedisServer::Del(const char *_key)
-{
-    FreeReply();
-
-    m_reply = (redisReply *)redisCommand(m_context, "DEL %s", _key);
-
-    if (m_reply == NULL || m_reply->type == REDIS_REPLY_ERROR)
-    {
-        std::cerr << "redis del faild" << std::endl;
-        Restart();
-        return -1;
-    }
     return 0;
 }
