@@ -205,7 +205,7 @@ void DemoClient::handle_input_and_send()
         req.set_value(1);
         req.set_uid(6989);
         req.set_usemoney(false);
-        req.set_pos(3);
+        req.set_pos(8);
         req.set_dropfrom(false);
         Modelinfo *temp = req.add_mode();
         temp->set_modeltype(0);
@@ -374,7 +374,7 @@ void DemoClient::handle_input_and_send()
         Addreq req;
         req.set_id(13);
         req.set_eltemtype(0);
-        req.set_value(50);
+        req.set_value(-50);
         req.set_uid(6989);
         req.set_usemoney(false);
         req.set_pos(3);
@@ -457,14 +457,14 @@ void DemoClient::handle_input_and_send()
     }
     else if (atoi(buffer) == 0)
     {
-        /*
         Reqest req;
         printf("#####################  请输入你的操作: 注册玩家的名字      #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
-        req.set_name(string(buffer));
+        req.set_name(string("chenzun"));
         printf("#####################  请输入你的操作: 注册玩家的密码      #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
-        req.set_password(string(buffer));
+        //req.set_password(string(buffer));
+        req.set_password(string("123456"));
         printf("#####################  请输入你的操作: 注册玩家时需要发送的message      #######################\n");
         ret = read(STDIN_FILENO, buffer, sizeof(buffer));
         req.set_message(string(buffer));
@@ -474,7 +474,7 @@ void DemoClient::handle_input_and_send()
         int coded_length = 0;
         head.encode(data, coded_length);
         req.SerializePartialToArray(data + MESSAGE_HEAD_SIZE, req.ByteSize());
-        */
+        /*
         Reqest req;
         req.set_name(string("chenzun"));
         req.set_password(string("123456"));
@@ -484,6 +484,7 @@ void DemoClient::handle_input_and_send()
         int coded_length = 0;
         head.encode(data, coded_length);
         req.SerializePartialToArray(data + MESSAGE_HEAD_SIZE, req.ByteSize());
+        */
     }
 
     int fd = m_client_conn_socket->get_fd();
