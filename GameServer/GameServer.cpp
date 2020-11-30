@@ -83,8 +83,8 @@ void GameServer::regist(TCPSocket &con, std::string &data, int datasize)
         m_map_players[m_name_map[req.name()]].player = make_shared<Player>(m_name_map[req.name()]);
     }
     m_sql_server->query(("UPDATE PlayerInfo SET user_id=" + std::to_string(m_name_map[req.name()]) + " WHERE user_name='" + req.name() + "';").c_str());
-    //m_sql_server->query(("UPDATE PlayerInfo SET hp=" + std::to_string(100) + " WHERE user_name='" + req.name() + "';").c_str());
-    //m_sql_server->query(("UPDATE PlayerInfo SET attack=" + std::to_string(100) + " WHERE user_name='" + req.name() + "';").c_str());
+    m_sql_server->query(("UPDATE PlayerInfo SET hp=" + std::to_string(100) + " WHERE user_name='" + req.name() + "';").c_str());
+    m_sql_server->query(("UPDATE PlayerInfo SET attack=" + std::to_string(100) + " WHERE user_name='" + req.name() + "';").c_str());
 
     Response res;
     res.set_uid(m_name_map[req.name()]);
@@ -254,12 +254,6 @@ void GameServer::solve_query(TCPSocket &con, std::string &data, int datasize)
         printf("#####################################################################################\n");
         printf("#####################################################################################\n");
     }
-    m_sql_server->query((std::string("INSERT INTO UseInfo (player_id,item_id,item_num) VALUES (6989,12,1);").c_str()));
-    m_sql_server->query((std::string("INSERT INTO PackageInfo (player_id,item_id,item_num) VALUES (6989,14,90);").c_str()));
-    m_sql_server->query((std::string("INSERT INTO PackageInfo (player_id,item_id,item_num) VALUES (6989,13,50);").c_str()));
-    m_sql_server->query((std::string("INSERT INTO ItemInfo (item_id,item_type,eltem_Module_Base_Hp,eltem_Module_Base_Attack,eltem_Module_Power_Hp,eltem_Module_Power_Attack,eltem_Module_Insert_Hp,eltem_Module_Insert_Attack) VALUE (14,'consume',10,30,10,10,10,10);").c_str()));
-    m_sql_server->query((std::string("INSERT INTO ItemInfo (item_id,item_type,eltem_Module_Base_Hp,eltem_Module_Base_Attack,eltem_Module_Power_Hp,eltem_Module_Power_Attack,eltem_Module_Insert_Hp,eltem_Module_Insert_Attack) VALUE (13,'money',0,0,0,0,0,0);").c_str()));
-    m_sql_server->query((std::string("INSERT INTO ItemInfo (item_id,item_type,eltem_Module_Base_Hp,eltem_Module_Base_Attack,eltem_Module_Power_Hp,eltem_Module_Power_Attack,eltem_Module_Insert_Hp,eltem_Module_Insert_Attack) VALUE (12,'equip',10,30,10,10,10,10);").c_str()));
 
     Response res;
     res.set_ack(1);

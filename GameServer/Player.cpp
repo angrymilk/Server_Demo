@@ -29,8 +29,8 @@ int Player::add(ItemInfo info, int pos, int value, bool to_package, std::shared_
         m_in_use[info.id] = std::make_shared<Equip>(info, value);
         m_hp += m_in_use[info.id]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP);
         m_attack += m_in_use[info.id]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack);
-        //sql_server->query(("UPDATE PlayerInfo SET hp=" + std::to_string(m_hp) + ",attack=" + std::to_string(m_attack) + "WHERE player_id=" + std::to_string(m_uin) + ";").c_str());
-        //sql_server->query(("INSERT INTO UseInfo ( player_id, item_id,item_num ) VALUES ( " + std::to_string(m_uin) + "," + std::to_string(info.id) + "," + std::to_string(1) + ");").c_str());
+        sql_server->query(("UPDATE PlayerInfo SET hp=" + std::to_string(m_hp) + ",attack=" + std::to_string(m_attack) + "WHERE player_id=" + std::to_string(m_uin) + ";").c_str());
+        sql_server->query(("INSERT INTO UseInfo ( player_id, item_id,item_num ) VALUES ( " + std::to_string(m_uin) + "," + std::to_string(info.id) + "," + std::to_string(1) + ");").c_str());
         return 0;
     }
     return m_package->add(info, pos, value, sql_server);
@@ -46,7 +46,7 @@ int Player::consume(int id, EltemType type, int value, bool to_package, bool inu
         m_hp -= m_in_use[id]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP);
         m_attack -= m_in_use[id]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack);
         m_in_use.erase(id);
-        //sql_server->query(("UPDATE PlayerInfo SET hp=" + std::to_string(m_hp) + ",attack=" + std::to_string(m_attack) + "WHERE player_id=" + std::to_string(m_uin) + ";").c_str());
+        sql_server->query(("UPDATE PlayerInfo SET hp=" + std::to_string(m_hp) + ",attack=" + std::to_string(m_attack) + "WHERE player_id=" + std::to_string(m_uin) + ";").c_str());
 
         return 0;
     }
@@ -59,8 +59,8 @@ int Player::consume(int id, EltemType type, int value, bool to_package, bool inu
         m_in_use[id] = m_package->consume(id, value, sql_server);
         m_hp += m_in_use[id]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP);
         m_attack += m_in_use[id]->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack);
-        //sql_server->query(("UPDATE PlayerInfo SET hp=" + std::to_string(m_hp) + ",attack=" + std::to_string(m_attack) + "WHERE player_id=" + std::to_string(m_uin) + ";").c_str());
-        //sql_server->query(("DELETE FROM UseInfo WHERE item_id=" + std::to_string(id) + ";").c_str());
+        sql_server->query(("UPDATE PlayerInfo SET hp=" + std::to_string(m_hp) + ",attack=" + std::to_string(m_attack) + "WHERE player_id=" + std::to_string(m_uin) + ";").c_str());
+        sql_server->query(("DELETE FROM UseInfo WHERE item_id=" + std::to_string(id) + ";").c_str());
         return 0;
     }
     auto p = m_package->consume(id, value, sql_server);
@@ -70,7 +70,7 @@ int Player::consume(int id, EltemType type, int value, bool to_package, bool inu
     {
         m_hp += abs(value) * (p->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_HP));
         m_attack += abs(value) * (p->get_attribute(EltemModuleType::eltem_Module_Base, EltemAttributeType::eltem_Attribute_Attack));
-        //sql_server->query(("UPDATE PlayerInfo SET hp=" + std::to_string(m_hp) + ",attack=" + std::to_string(m_attack) + "WHERE player_id=" + std::to_string(m_uin) + ";").c_str());
+        sql_server->query(("UPDATE PlayerInfo SET hp=" + std::to_string(m_hp) + ",attack=" + std::to_string(m_attack) + "WHERE player_id=" + std::to_string(m_uin) + ";").c_str());
     }
     return 0;
 }
