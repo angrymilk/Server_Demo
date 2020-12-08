@@ -47,9 +47,12 @@ public:
 private:
     std::shared_ptr<TCPSocket> m_client_conn_socket;
     std::shared_ptr<TCPSocket> m_client_read_socket;
+    std::unordered_map<int, std::shared_ptr<TCPSocket>> m_gate_socket;
+    std::vector<std::pair<int, std::shared_ptr<TCPSocket>>> m_gate;
     ClientInfo m_clientinfo;
     ServerInfo m_serverinfo;
     char m_recv_buf[MAX_SS_PACKAGE_SIZE];
     Epoll m_epoll;
+    int m_send = 0;
 };
 #endif

@@ -13,3 +13,11 @@ int main(int argc, char **argv)
     ptr->working();
     return 0;
 }
+
+/*
+INSERT INTO PlayerInfo(port, ip) VALUES(3000, "127.0.0.1", )
+
+    alter table PlayerInfo add user_ip varchar(30);
+
+UPDATE PlayerInfo SET port=3000 where user_name="chenzun";
+    */
