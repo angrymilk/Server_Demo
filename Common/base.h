@@ -29,7 +29,6 @@
 
 #endif
 
-#include "../Proto/ProtoID.pb.h"
 #include "../Proto/Demo.pb.h"
 enum
 {

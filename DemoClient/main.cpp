@@ -18,6 +18,8 @@ int main(int argc, char **argv)
 INSERT INTO PlayerInfo(port, ip) VALUES(3000, "127.0.0.1", )
 
     alter table PlayerInfo add user_ip varchar(30);
+    alter table PlayerInfo change ip_address user_ip varchar(30); 
+    alter table PlayerInfo change uid user_id column specifications and constraints;
 
-UPDATE PlayerInfo SET port=3000 where user_name="chenzun";
+UPDATE PlayerInfo SET user_id=6989 where user_name="chenzun";
     */
