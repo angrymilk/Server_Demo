@@ -140,33 +140,41 @@ void DemoClient::handle_input_and_send()
     }
     else if (atoi(buffer) == 5)
     {
-        ClientMoveMessage res;
-        res.set_uid(6989);
-        res.set_posx(10);
-        res.set_posy(10);
-        res.set_posz(10);
-        res.set_tarx(10);
-        res.set_tary(10);
-        res.set_tarz(10);
-        res.set_speed(100);
-        res.set_time(20);
-        res.set_password("123456");
-        head.m_message_len = ((MESSAGE_HEAD_SIZE + res.ByteSize()) | (1 << 20) | (1 << 22));
-        len = (MESSAGE_HEAD_SIZE + res.ByteSize());
-        int codeLength = 0;
-        head.encode(data, codeLength);
-        res.SerializePartialToArray(data + MESSAGE_HEAD_SIZE, res.ByteSize());
-        int fd = m_gate[0].first;
-        ret = m_gate[0].second->send_data(data, (size_t)len);
-        if (ret < success)
+        while (1)
         {
-            printf("Send Failed...........\n");
+            for (int i = 0; i < 1000; i++)
+            {
+                ClientMoveMessage res;
+                res.set_uid(6989);
+                res.set_posx(10);
+                res.set_posy(10);
+                res.set_posz(10);
+                res.set_tarx(10);
+                res.set_tary(10);
+                res.set_tarz(10);
+                res.set_speed(100);
+                res.set_time(20);
+                res.set_password("123456");
+                head.m_message_len = ((MESSAGE_HEAD_SIZE + res.ByteSize()) | (1 << 20) | (1 << 22));
+                len = (MESSAGE_HEAD_SIZE + res.ByteSize());
+                int codeLength = 0;
+                head.encode(data, codeLength);
+                res.SerializePartialToArray(data + MESSAGE_HEAD_SIZE, res.ByteSize());
+                int fd = m_gate[0].first;
+                ret = m_gate[0].second->send_data(data, (size_t)len);
+                if (ret < success)
+                {
+                    printf("Send Failed...........\n");
+                }
+                if (ret > success)
+                {
+                    printf("Send %d Times Until finished......\n", ret);
+                }
+                printf("send msg  fd:%d    msglen = %d\n", fd, head.m_message_len);
+            }
+            //sleep(0.1);
+            break;
         }
-        if (ret > success)
-        {
-            printf("Send %d Times Until finished......\n", ret);
-        }
-        printf("send msg  fd:%d    msglen = %d\n", fd, head.m_message_len);
         return;
     }
 
