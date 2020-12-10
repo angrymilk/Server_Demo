@@ -23,3 +23,5 @@ INSERT INTO PlayerInfo(port, ip) VALUES(3000, "127.0.0.1", )
 
 UPDATE PlayerInfo SET user_id=6989 where user_name="chenzun";
     */
+
+   UPDATE PlayerInfo SET port=3002 where user_name="chenzun";
